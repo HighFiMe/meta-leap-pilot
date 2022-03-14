@@ -14,13 +14,30 @@
       <v-spacer></v-spacer>
 
       <div class="d-flex align-center" style="padding-right:24px;">
+      <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
       <v-btn
+        v-if="!$store.state.account"
         depressed
-        href=""
+        v-bind="attrs"
+        v-on="on"
         style="text-transform: unset !important; background:lightgrey; font-size:1.2em;"
       >
         connect wallet
       </v-btn>
+      <v-btn v-else depressed style="text-transform: unset !important; background:lightgrey; font-size:1.2em;">{{ $store.state.account }}</v-btn>
+      </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            link
+            @click="handleClick(index)"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       </div>
     </v-app-bar>
 
@@ -79,7 +96,29 @@ export default {
 
   data: () => ({
       toggle_none: null,
+      items: [
+      { title: 'Metamask Login',
+        click() {
+          this.$store
+            .dispatch("connectToMetamask")
+          console.log('metamask')
+        } 
+      },
+      { title: 'walletconnect',
+        click() {
+          this.$store
+            .dispatch("connectToWalletconnect")
+          console.log('walletconnect')
+        } 
+      },
+    ],
   }),
+
+  methods: {
+    handleClick(index) {
+      this.items[index].click.call(this)
+    }
+  }
 };
 </script>
 
