@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Web3 from "web3";
+import Moralis from "../plugins/moralis";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 Vue.use(Vuex);
@@ -10,6 +11,7 @@ export default new Vuex.Store({
     web3: null,
     provider: null,
     account: null,
+    nftList: {},
   },
   getters: {
     
@@ -24,6 +26,9 @@ export default new Vuex.Store({
     setAccount(state, account) {
       state.account = account;
       state.web3.eth.defaultAccount = account;
+    },
+    setNftListInAddress(state, { nftList, fundAddress}) {
+      Vue.set(state.nftList, fundAddress, nftList);
     },
   },
   actions: {
@@ -49,6 +54,15 @@ export default new Vuex.Store({
       const address = accounts[0];
       commit("setAccount", address);
       console.log(address);
-    }
+    },
+
+    async getNFTsInAddress({ commit }) {
+      const address='0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054';
+      const options = { chain: "rinkeby", address: address };
+      const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
+      console.log(nftsInAddress.result[0].token_uri);
+      commit("setNftListInAddress", { nftList: nftsInAddress["result"], fundAddress: address});
+      return nftsInAddress;
+    },
   },
 });
