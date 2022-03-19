@@ -17,7 +17,7 @@
       <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
       <v-btn
-        v-if="!$store.state.account"
+        v-if="!$store.state.walletModule.account"
         depressed
         v-bind="attrs"
         v-on="on"
@@ -25,7 +25,7 @@
       >
         connect wallet
       </v-btn>
-      <v-btn v-else depressed style="text-transform: unset !important; background:lightgrey; font-size:1.2em;">{{ $store.state.account }}</v-btn>
+      <v-btn v-else depressed style="text-transform: unset !important; background:lightgrey; font-size:1.2em;">{{ $store.state.walletModule.account }}</v-btn>
       </template>
         <v-list>
           <v-list-item
@@ -84,6 +84,7 @@
 import MyCollection from './components/MyCollection';
 import ManagedNFTs from './components/ManagedNFTs';
 import PlayerAccess from './components/PlayerAccess';
+// import detectEthereumProvider from '@metamask/detect-provider';
 
 export default {
   name: 'App',
@@ -100,15 +101,15 @@ export default {
       { title: 'Metamask Login',
         click() {
           this.$store
-            .dispatch("connectToMetamask")
-          console.log('metamask')
+            .dispatch("connectToMetamask").walletModule
+          // console.log(window.ethereum.request({ method: 'eth_accounts' }))
         } 
       },
       { title: 'walletconnect',
         click() {
           this.$store
-            .dispatch("connectToWalletconnect")
-          console.log('walletconnect')
+            .dispatch("connectToWalletconnect").walletModule
+          // console.log(window.ethereum.request({ method: 'eth_accounts' }))
         } 
       },
     ],
@@ -118,7 +119,19 @@ export default {
     handleClick(index) {
       this.items[index].click.call(this)
     }
-  }
+  },
+
+  beforeMount() {
+    this.$nextTick(async () => {
+      if(window.ethereum.isConnected())
+      {
+        const currAccounts = await window.ethereum
+          .request({ method: 'eth_accounts' })
+        // console.log(accounts)
+        this.$store.state.walletModule.account = currAccounts[0];
+      }
+    });
+  },
 };
 </script>
 
