@@ -5,18 +5,25 @@
            </v-row>
         <v-row>
           <v-col v-for="(nft) in getNFTList" :key="nft.token_id" cols="4">
+           
             <v-img :src="nft.token_uri" />
-          </v-col>
+            <modal/>
+            </v-col>
         </v-row>
   </v-container>
 </template>
 
 <script>
+  import modal from './modal.vue';
   export default {
     name: 'MyCollection',
-
+    
+    components:{
+      modal,
+    },
+    
     data: () => ({
-      
+              
     }),
     computed:{
       getNFTList() {
