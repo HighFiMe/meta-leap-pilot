@@ -11,7 +11,7 @@
                       v-bind="attrs"
                       v-on="on"
                      >
-                     Open Dialog
+                     Wrapped NFTs
                     </v-btn>
                    </template>
                    <v-card>

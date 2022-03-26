@@ -56,6 +56,13 @@
             href=""
             style="text-transform: unset !important; background:lightgrey; margin-left:20px; font-size:1.2em; border-radius:4px; padding: 0px 24px;"
           >
+            Wrapped NFT's
+          </v-btn>
+          <v-btn
+            depressed
+            href=""
+            style="text-transform: unset !important; background:lightgrey; margin-left:20px; font-size:1.2em; border-radius:4px; padding: 0px 24px;"
+          >
             managed nfts
           </v-btn>
           <v-btn
@@ -71,9 +78,12 @@
         <MyCollection/>
       </div>
       <div v-show="toggle_none==1">
-        <ManagedNFTs/>
+        <wrappedNFTs/>
       </div>
       <div v-show="toggle_none==2">
+        <ManagedNFTs/>
+      </div>
+      <div v-show="toggle_none==3">
         <PlayerAccess/>
       </div>
     </v-main>
@@ -82,6 +92,7 @@
 
 <script>
 import MyCollection from './components/MyCollection';
+import wrappedNFTs from './components/WrappedNFTs.vue';
 import ManagedNFTs from './components/ManagedNFTs';
 import PlayerAccess from './components/PlayerAccess';
 // import detectEthereumProvider from '@metamask/detect-provider';
@@ -91,6 +102,7 @@ export default {
 
   components: {
     MyCollection,
+    wrappedNFTs,
     ManagedNFTs,
     PlayerAccess,
   },
