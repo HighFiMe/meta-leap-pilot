@@ -1,14 +1,5 @@
 <template>
   <v-container>
-<<<<<<< HEAD
-    <v-row v-if="getNFTList = null" style="text-align:center;" align="center" justify="center">
-             No NFTs present in the collection
-           </v-row>
-        <v-row>
-          <v-col v-for="(nft) in getNFTList" :key="nft.block_number" cols="4">
-           
-            <v-img :src="nft.token_uri" />
-=======
     <v-row v-if="(getNFTList = null)" style="text-align: center" align="center" justify="center">
       No NFTs present in the collection
     </v-row>
@@ -26,7 +17,6 @@
             <v-row>
               <v-img :src="nft.token_uri" height="250" width="300" />
             </v-row>
->>>>>>> bfd813e (adding approve and transfer)
             <v-row justify="center">
               <v-btn color="primary" dark v-bind="attrs" v-on="on"> Options {{ nft.token_id }}</v-btn>
             </v-row>
@@ -74,11 +64,6 @@ export default {
       // console.log(this.$store.state.nftList[address]);
       return this.$store.state.nftList[address];
     },
-<<<<<<< HEAD
-    method:{
-      submit(){
-        //this.$refs.form.validate();
-=======
   },
   methods: {
     submit(buttonType, token_id) {
@@ -86,7 +71,6 @@ export default {
         console.log(this.address, token_id);
       } else {
         console.log(this.address, token_id);
->>>>>>> bfd813e (adding approve and transfer)
       }
       this.dialog = false;
     },
