@@ -10,17 +10,19 @@ Vue.use(Vuex);
 const myNftAbi = require("../../contracts/abi/myNftAbi.json");
 const rentalProtAbi = require("../../contracts/abi/rentingProtAbi.json");
 
-const APIURL = " https://api.studio.thegraph.com/query/QmQtSMwU5tLQcM7MA5AqFMfWjDb4purq3qfiNBThYuDXS3/graph/current";
+const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
 
 const tokensQuery = `
   query {
-    tokens {
-      id
-      tokenID
-      contentURI
-      metadataURI
-    }
+  nfts(where: {approved: "0x0b3074cd5891526420d493b13439f3d4b8be6144"}) {
+    id
+    tokenId
+    tokenURI
+    approved
+    owner
+    user
   }
+}
 `;
 const client = createClient({
   url: APIURL,
