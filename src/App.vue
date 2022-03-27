@@ -95,6 +95,7 @@ import MyCollection from './components/MyCollection';
 import wrappedNFTs from './components/WrappedNFTs.vue';
 import ManagedNFTs from './components/ManagedNFTs';
 import PlayerAccess from './components/PlayerAccess';
+//import axios from 'axios';
 // import detectEthereumProvider from '@metamask/detect-provider';
 
 export default {
@@ -109,6 +110,7 @@ export default {
 
   data: () => ({
       toggle_none: null,
+      example1:'',
       items: [
       { title: 'Metamask Login',
         click() {
@@ -128,6 +130,7 @@ export default {
   }),
 
   methods: {
+
     handleClick(index) {
       this.items[index].click.call(this)
     }
@@ -144,6 +147,7 @@ export default {
       }
     });
   },
+  
 };
 </script>
 

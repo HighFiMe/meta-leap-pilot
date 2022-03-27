@@ -3,10 +3,26 @@ import Vuex from "vuex";
 import Moralis from "../plugins/moralis";
 import walletModule from "./wallet.js";
 import Web3 from "web3";
+import { createClient } from 'urql';
 
 Vue.use(Vuex);
 
 const myNftAbi = require("../../contracts/abi/myNftAbi.json");
+const APIURL = ' https://api.studio.thegraph.com/query/QmQtSMwU5tLQcM7MA5AqFMfWjDb4purq3qfiNBThYuDXS3/graph/current';
+
+const tokensQuery = `
+  query {
+    tokens {
+      id
+      tokenID
+      contentURI
+      metadataURI
+    }
+  }
+`
+const client = createClient({
+  url: APIURL,
+})
 
 export default new Vuex.Store({
   modules: {
@@ -15,15 +31,25 @@ export default new Vuex.Store({
   state: {
     nftList: {},
     wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
+    example:'',    
   },
   getters: {},
   mutations: {
     setNftListInAddress(state, { nftList, fundAddress }) {
       Vue.set(state.nftList, fundAddress, nftList);
     },
+    setExample(state,example){
+      state.example = example;
+    }
   },
   actions: {
+    async getData(){
+      const data = await client.query(tokensQuery).toPromise();
+      console.log(data);
+      return data;
+    },
     async getNFTsInAddress({ commit }) {
+      //const address = this.$store.state.accounnt;
       const address = "0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054";
       const options = { chain: "rinkeby", address: address };
       const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);

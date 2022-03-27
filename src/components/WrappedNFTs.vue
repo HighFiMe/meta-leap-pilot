@@ -4,7 +4,7 @@
              No NFTs present in the collection
            </v-row>
         <v-row>
-          <v-col v-for="(nft) in getNFTList" :key="nft.token_id" cols="4">
+          <v-col v-for="(nft) in getNFTList" :key="nft.block_number" cols="4">
            
             <v-img :src="nft.token_uri" />
             <v-row justify="center">
@@ -85,7 +85,7 @@
     },
     method:{
       submit(){
-        this.$refs.form.validate();
+        //this.$refs.form.validate();
       }
     },
     async mounted(){

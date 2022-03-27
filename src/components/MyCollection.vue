@@ -4,7 +4,7 @@
       No NFTs present in the collection
     </v-row>
     <v-row>
-      <v-col v-for="nft in getNFTList" :key="nft.token_id" cols="4">
+      <v-col v-for="nft in getNFTList" :key="nft.block_number" cols="4">
         <v-card height="200">
           <v-img :src="nft.token_uri" height="200" />
           <v-card-text>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import modal from "./modal.vue";
+//import modal from "./modal.vue";
 export default {
   name: "MyCollection",
 

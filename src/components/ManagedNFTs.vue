@@ -4,7 +4,7 @@
              No NFTs present in the collection
            </v-row>
         <v-row>
-          <v-col v-for="(nft) in getNFTList" :key="nft.token_id" cols="4">
+          <v-col v-for="(nft) in getNFTList" :key="nft.block_number" cols="4">
             <v-img :src="nft.token_uri" />
           </v-col>
         </v-row>
@@ -30,6 +30,7 @@
     },
     async mounted(){
       await this.$store.dispatch("getNFTsInAddress");
+      await this.$store.dispatch("getData");
     },
   }
 </script>
