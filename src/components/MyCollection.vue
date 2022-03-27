@@ -4,21 +4,21 @@
       No NFTs present in the collection
     </v-row>
     <v-row>
-      <v-col v-for="nft in getNFTList" :key="nft.block_number" cols="4">
-        <v-card height="200">
-          <v-img :src="nft.token_uri" height="200" />
-          <v-card-text>
-            <!-- <modal /> -->
-            <v-btn v-on:click="wrapNFT(nft.owner_of, nft.token_address, nft.token_id)"> Wrap NFT </v-btn>
-          </v-card-text>
-        </v-card>
+      <v-col v-for="nft in getNFTList" :key="nft.token_id" cols="4" height="330" align="center" justify="center">
+        <v-img :src="nft.token_uri" height="250" />
+
+        <v-btn
+          v-on:click="wrapNFT(nft.owner_of, nft.token_address, nft.token_id)"
+          style="text-align: center; margin-top: 25px"
+        >
+          Wrap NFT
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-//import modal from "./modal.vue";
 export default {
   name: "MyCollection",
 
