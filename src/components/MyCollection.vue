@@ -4,15 +4,24 @@
       No NFTs present in the collection
     </v-row>
     <v-row>
-      <v-col v-for="nft in getNFTList" :key="nft.token_id" cols="4" height="330" align="center" justify="center">
-        <v-img :src="nft.token_uri" height="250" />
+      <v-col
+        v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri))"
+        :key="nft.token_id"
+        cols="4"
+        height="330"
+        align="center"
+        justify="center"
+      >
+        <div>
+          <v-img :src="nft.token_uri" height="250" />
 
-        <v-btn
-          v-on:click="wrapNFT(nft.owner_of, nft.token_address, nft.token_id)"
-          style="text-align: center; margin-top: 25px"
-        >
-          Wrap NFT
-        </v-btn>
+          <v-btn
+            v-on:click="wrapNFT(nft.owner_of, nft.token_address, nft.token_id)"
+            style="text-align: center; margin-top: 25px"
+          >
+            Wrap NFT
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -46,6 +55,15 @@ export default {
         from: account,
         tokenId: tokenId,
       });
+    },
+    showNFT(symbol, tokenUri) {
+      console.log(symbol, tokenUri);
+      if (symbol != "wNFT") {
+        if (tokenUri != "" && tokenUri != null && tokenUri != "abcd") {
+          return true;
+        }
+      }
+      return false;
     },
   },
   async mounted() {

@@ -18,7 +18,7 @@
               <v-img :src="nft.tokenURI" height="250" width="300" />
             </v-row>
             <v-row justify="center">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on"> Options {{ nft.tokenId }}</v-btn>
+              <v-btn color="primary" dark v-bind="attrs" v-on:click="openModal(nft.token_id)"> Options </v-btn>
             </v-row>
           </div>
         </template>
@@ -31,8 +31,9 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Approve </v-btn>
-            <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Transfer </v-btn>
+            <v-btn color="primary" text @click="dialog = false"> close </v-btn>
+            <v-btn color="primary" text @click="submit('approve', nft.token_id)"> Approve </v-btn>
+            <v-btn color="primary" text @click="submit('transfer', nft.token_id)"> Transfer </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -55,9 +56,10 @@ export default {
   data: () => ({
     address: "",
     dialog: false,
+    tokenId: "",
   }),
   computed: {
-    getNFTs(){
+    getNFTs() {
       if (this.$store.state.dataListQuery.nfts == null || this.$store.state.nftList == {}) return [];
       //console.log(this.$store.state.dataListQuery.nfts);
       return this.$store.state.dataListQuery.nfts;
@@ -72,13 +74,30 @@ export default {
     },*/
   },
   methods: {
+    openModal(token_id) {
+      this.dialog = true;
+      this.tokenId = token_id;
+    },
+
     submit(buttonType, token_id) {
-      if (buttonType == "transfer") {
-        console.log(this.address, token_id);
-      } else {
-        console.log(this.address, token_id);
+      const account = this.$store.state.walletModule.account;
+      console.log(account);
+      if (account == null || account == "") {
+        this.$vToastify.warning("Connect your wallet please");
+        return;
       }
-      this.dialog = false;
+
+      var dispatchTo = buttonType == "approve" ? "assignApprover" : "transfer";
+
+      this.$store
+        .dispatch(dispatchTo, {
+          to: this.address,
+          tokenId: this.tokenId,
+        })
+        .then(() => {
+          this.$vToastify.success("Action was successful !");
+          this.dialog = false;
+        });
     },
   },
   async mounted() {

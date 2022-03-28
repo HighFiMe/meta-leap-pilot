@@ -59,7 +59,7 @@ export default new Vuex.Store({
       const address = "0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054";
       const options = { chain: "rinkeby", address: address };
       const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
-      console.log(nftsInAddress.result[0].token_uri);
+
       commit("setNftListInAddress", { nftList: nftsInAddress["result"], fundAddress: address });
       return nftsInAddress;
     },
@@ -78,7 +78,7 @@ export default new Vuex.Store({
 
     async getWrapNFTContract({ state }) {
       try {
-        var rentProtocolChecksum = Web3.utils.toChecksumAddress(state.wrappingProtocol);
+        var rentProtocolChecksum = Web3.utils.toChecksumAddress(this.wrappingProtocol);
         var rentProtContract = new state.walletModule.web3.eth.Contract(rentalProtAbi, rentProtocolChecksum);
         return rentProtContract;
       } catch (error) {
