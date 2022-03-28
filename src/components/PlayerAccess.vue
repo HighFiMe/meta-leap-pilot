@@ -1,13 +1,9 @@
 <template>
   <v-container>
-    <v-row v-if="(getNFTs = null)" style="text-align: center" align="center" justify="center">
-      No NFTs present in the collection
-    </v-row>
-    <v-row>
-      <v-col v-for="nft in getNFTs" :key="nft.id" cols="4">
-        <v-img :src="nft.tokenURI" />
-      </v-col>
-    </v-row>
+    <div>
+      Data: {{ example1 }}
+    </div>
+      <v-btn @click="getURL()">get lang</v-btn>
   </v-container>
 </template>
 
@@ -19,14 +15,13 @@ export default {
     data: () => ({
             
     }),
-    computed:{
-      getNFTs(){
-        if (this.$store.state.dataListQuery.nfts == null || this.$store.state.nftList == {}) return [];
-      //console.log(this.$store.state.dataListQuery.nfts);
-      return this.$store.state.dataListQuery.nfts;
-    },
+    methods:{
+      async getURL(){
+        
+      },
     },
     async mounted(){
+      console.log("here")
       await this.$store.dispatch("getdata");
     },
   }

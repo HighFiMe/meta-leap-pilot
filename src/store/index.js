@@ -35,23 +35,21 @@ export default new Vuex.Store({
   state: {
     nftList: {},
     wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
-    dataListQuery:{},
+    example: "",
   },
   getters: {},
   mutations: {
     setNftListInAddress(state, { nftList, fundAddress }) {
       Vue.set(state.nftList, fundAddress, nftList);
     },
-    setDataList(state,data){
-      state.dataListQuery = data;
-    }
-    
+    setExample(state, example) {
+      state.example = example;
+    },
   },
   actions: {
-    async getData({commit}) {
+    async getData() {
       const data = await client.query(tokensQuery).toPromise();
-      console.log(data.data);
-      commit("setDataList",data.data);
+      console.log(data);
       return data;
     },
     async getNFTsInAddress({ commit }) {
@@ -78,7 +76,8 @@ export default new Vuex.Store({
 
     async getWrapNFTContract({ state }) {
       try {
-        var rentProtocolChecksum = Web3.utils.toChecksumAddress(this.wrappingProtocol);
+        console.log(state.wrappingProtocol);
+        var rentProtocolChecksum = Web3.utils.toChecksumAddress(state.wrappingProtocol);
         var rentProtContract = new state.walletModule.web3.eth.Contract(rentalProtAbi, rentProtocolChecksum);
         return rentProtContract;
       } catch (error) {

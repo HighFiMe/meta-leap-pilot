@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row v-if="(getNFTs = null)" style="text-align: center" align="center" justify="center">
+    <v-row v-if="(getNFTList = null)" style="text-align: center" align="center" justify="center">
       No NFTs present in the collection
     </v-row>
     <v-row v-else>
       <v-dialog
-        v-for="nft in getNFTs"
-        :key="nft.tokenId"
+        v-for="nft in getNFTList"
+        :key="nft.token_id"
         :retain-focus="false"
         persistent
         v-model="dialog"
@@ -15,7 +15,7 @@
         <template v-slot:activator="{ on, attrs }">
           <div class="wNFT-card">
             <v-row>
-              <v-img :src="nft.tokenURI" height="250" width="300" />
+              <v-img :src="nft.token_uri" height="250" width="300" />
             </v-row>
             <v-row justify="center">
               <v-btn color="primary" dark v-bind="attrs" v-on:click="openModal(nft.token_id)"> Options </v-btn>
@@ -59,19 +59,13 @@ export default {
     tokenId: "",
   }),
   computed: {
-    getNFTs() {
-      if (this.$store.state.dataListQuery.nfts == null || this.$store.state.nftList == {}) return [];
-      //console.log(this.$store.state.dataListQuery.nfts);
-      return this.$store.state.dataListQuery.nfts;
-    },
-    /*
     getNFTList() {
       const address = "0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054";
       if (this.$store.state.nftList == null || this.$store.state.nftList == {}) return [];
       console.log(this.$store.state.nftList);
       // console.log(this.$store.state.nftList[address]);
       return this.$store.state.nftList[address];
-    },*/
+    },
   },
   methods: {
     openModal(token_id) {
@@ -79,7 +73,7 @@ export default {
       this.tokenId = token_id;
     },
 
-    submit(buttonType) {
+    submit(buttonType, token_id) {
       const account = this.$store.state.walletModule.account;
       console.log(account);
       if (account == null || account == "") {
@@ -101,8 +95,7 @@ export default {
     },
   },
   async mounted() {
-    //await this.$store.dispatch("getNFTsInAddress");
-    await this.$store.dispatch("getData");
+    await this.$store.dispatch("getNFTsInAddress");
   },
 };
 </script>
