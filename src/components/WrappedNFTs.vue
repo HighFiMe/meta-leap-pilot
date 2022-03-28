@@ -79,7 +79,7 @@ export default {
       this.tokenId = token_id;
     },
 
-    submit(buttonType, token_id) {
+    submit(buttonType) {
       const account = this.$store.state.walletModule.account;
       console.log(account);
       if (account == null || account == "") {
