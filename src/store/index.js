@@ -76,9 +76,9 @@ export default new Vuex.Store({
 
     async getWrapNFTContract({ state }) {
       try {
-        var rentProtocolChecksum = Web3.utils.toChecksumAddress(wrappingProtocol);
+        var rentProtocolChecksum = Web3.utils.toChecksumAddress(state.wrappingProtocol);
         var rentProtContract = new state.walletModule.web3.eth.Contract(rentalProtAbi, rentProtocolChecksum);
-        return nftContract;
+        return rentProtContract;
       } catch (error) {
         console.log(error);
         return null;
