@@ -35,21 +35,23 @@ export default new Vuex.Store({
   state: {
     nftList: {},
     wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
-    example: "",
+    dataListQuery:{},
   },
   getters: {},
   mutations: {
     setNftListInAddress(state, { nftList, fundAddress }) {
       Vue.set(state.nftList, fundAddress, nftList);
     },
-    setExample(state, example) {
-      state.example = example;
-    },
+    setDataList(state,data){
+      state.dataListQuery = data;
+    }
+    
   },
   actions: {
-    async getData() {
+    async getData({commit}) {
       const data = await client.query(tokensQuery).toPromise();
-      console.log(data);
+      console.log(data.data);
+      commit("setDataList",data.data);
       return data;
     },
     async getNFTsInAddress({ commit }) {

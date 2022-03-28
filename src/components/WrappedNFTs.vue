@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row v-if="(getNFTList = null)" style="text-align: center" align="center" justify="center">
+    <v-row v-if="(getNFTs = null)" style="text-align: center" align="center" justify="center">
       No NFTs present in the collection
     </v-row>
     <v-row v-else>
       <v-dialog
-        v-for="nft in getNFTList"
-        :key="nft.token_id"
+        v-for="nft in getNFTs"
+        :key="nft.tokenId"
         :retain-focus="false"
         persistent
         v-model="dialog"
@@ -15,10 +15,10 @@
         <template v-slot:activator="{ on, attrs }">
           <div class="wNFT-card">
             <v-row>
-              <v-img :src="nft.token_uri" height="250" width="300" />
+              <v-img :src="nft.tokenURI" height="250" width="300" />
             </v-row>
             <v-row justify="center">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on"> Options {{ nft.token_id }}</v-btn>
+              <v-btn color="primary" dark v-bind="attrs" v-on="on"> Options {{ nft.tokenId }}</v-btn>
             </v-row>
           </div>
         </template>
@@ -31,8 +31,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="submit('approve', nft.token_id)"> Approve </v-btn>
-            <v-btn color="primary" text @click="submit('transfer', nft.token_id)"> Transfer </v-btn>
+            <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Approve </v-btn>
+            <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Transfer </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -57,13 +57,19 @@ export default {
     dialog: false,
   }),
   computed: {
+    getNFTs(){
+      if (this.$store.state.dataListQuery.nfts == null || this.$store.state.nftList == {}) return [];
+      //console.log(this.$store.state.dataListQuery.nfts);
+      return this.$store.state.dataListQuery.nfts;
+    },
+    /*
     getNFTList() {
       const address = "0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054";
       if (this.$store.state.nftList == null || this.$store.state.nftList == {}) return [];
       console.log(this.$store.state.nftList);
       // console.log(this.$store.state.nftList[address]);
       return this.$store.state.nftList[address];
-    },
+    },*/
   },
   methods: {
     submit(buttonType, token_id) {
@@ -76,7 +82,8 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("getNFTsInAddress");
+    //await this.$store.dispatch("getNFTsInAddress");
+    await this.$store.dispatch("getData");
   },
 };
 </script>
