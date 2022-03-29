@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-main v-if="getConnectedAccount">
     <v-row v-if="(getNFTList = null)" style="text-align: center" align="center" justify="center">
       No NFTs present in the collection
     </v-row>
@@ -24,6 +25,8 @@
         </div>
       </v-col>
     </v-row>
+    </v-main>
+    <v-main>Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
   </v-container>
 </template>
 
@@ -41,6 +44,10 @@ export default {
       console.log(this.$store.state.nftList);
       // console.log(this.$store.state.nftList[address]);
       return this.$store.state.nftList[address];
+    },
+    getConnectedAccount() {
+      console.log(this.$store.state.walletModule.account);
+      return this.$store.state.walletModule.account;
     },
   },
   methods: {
