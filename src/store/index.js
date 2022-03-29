@@ -12,14 +12,15 @@ const rentalProtAbi = require("../../contracts/abi/rentingProtAbi.json");
 
 const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
 
+//const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
   query {
-  nfts(where: {approved: "0x0b3074cd5891526420d493b13439f3d4b8be6144"}) {
+  nfts(where: {here: "0x0b3074cd5891526420d493b13439f3d4b8be6144"}) {
     id
     tokenId
     tokenURI
     approved
-    owner
+    owner 
     user
   }
 }
@@ -35,22 +36,52 @@ export default new Vuex.Store({
   state: {
     nftList: {},
     wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
-    example: "",
+    dataList_WrappedNFTs:{},
+    dataList_ManagedNFTs:{},
+    dataList_PlayerAccess:{},
   },
   getters: {},
   mutations: {
     setNftListInAddress(state, { nftList, fundAddress }) {
       Vue.set(state.nftList, fundAddress, nftList);
     },
-    setExample(state, example) {
-      state.example = example;
+    setDataList_WrappedNFTs(state,data){
+      state.dataList_WrappedNFTs = data;
     },
+    setDataList_ManagedNFTs(state,data){
+      state.dataList_ManagedNFTs = data;
+    },
+    setDataList_PlayerAccess(state,data){
+      state.dataList_PlayerAccess = data;
+    },    
   },
   actions: {
-    async getData() {
-      const data = await client.query(tokensQuery).toPromise();
-      console.log(data);
-      return data;
+    async getData({state,commit}, {component}) {
+      var address = state.walletModule.account;
+      console.log(address);      
+      if(component==="WrappedNFTs"){
+        var wrapped_nfts = tokensQuery.replace('here', 'owner');
+        var dataWrappedNFTs = await client.query(wrapped_nfts).toPromise();
+        console.log(dataWrappedNFTs.data);
+        commit("setDataList_WrappedNFTs",dataWrappedNFTs.data);
+        return dataWrappedNFTs;
+    }
+    else if(component==="ManagedNFTs"){
+      var managed_nfts = tokensQuery.replace('here', 'approved');
+      var dataManagedNFTs = await client.query(managed_nfts).toPromise();
+      console.log(dataManagedNFTs.data);
+      commit("setDataList_ManagedNFTs",dataManagedNFTs.data);
+      return dataManagedNFTs;
+    }
+    else if(component==="PlayerAccess"){
+      var player_access = tokensQuery.replace('here', 'user');
+      var dataPlayerAccess = await client.query(player_access).toPromise();
+      console.log(dataPlayerAccess.data);
+      commit("setDataList_PlayerAccess",dataPlayerAccess.data);
+      return dataPlayerAccess;
+    }
+    
+      
     },
     async getNFTsInAddress({ commit }) {
       //const address = this.$store.state.accounnt;
