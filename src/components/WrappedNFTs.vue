@@ -84,7 +84,7 @@ export default {
       this.dialog = true;
       return;
     },
-    submit(buttonType, token_id) {
+    submit(buttonType) {
       let action = buttonType == "approve" ? "assignApprover" : "transfer";
 
       let account = this.$store.state.walletModule.account;

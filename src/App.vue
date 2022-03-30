@@ -121,7 +121,7 @@ import PlayerAccess from "./components/PlayerAccess";
 //import axios from 'axios';
 // import detectEthereumProvider from '@metamask/detect-provider';
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export default {
   name: "App",
@@ -170,7 +170,9 @@ export default {
     });
   },
   async mounted() {
-    while (true) {
+    let a = 1;
+    let b = 1;
+    while (a == b) {
       await sleep(10000);
       await this.$store.dispatch("refreshData");
     }
