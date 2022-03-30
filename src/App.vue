@@ -121,6 +121,8 @@ import PlayerAccess from "./components/PlayerAccess";
 //import axios from 'axios';
 // import detectEthereumProvider from '@metamask/detect-provider';
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export default {
   name: "App",
 
@@ -166,6 +168,12 @@ export default {
         this.$store.state.walletModule.account = currAccounts[0];
       }
     });
+  },
+  async mounted() {
+    while (true) {
+      await sleep(10000);
+      await this.$store.dispatch("refreshData");
+    }
   },
 };
 </script>

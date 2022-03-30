@@ -34,63 +34,69 @@ export default new Vuex.Store({
     walletModule,
   },
   state: {
-    nftList: {},
+    dataList_MyNFTs: [],
     wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
-    dataList_WrappedNFTs:{},
-    dataList_ManagedNFTs:{},
-    dataList_PlayerAccess:{},
+    dataList_WrappedNFTs: {},
+    dataList_ManagedNFTs: {},
+    dataList_PlayerAccess: {},
   },
   getters: {},
   mutations: {
-    setNftListInAddress(state, { nftList, fundAddress }) {
-      Vue.set(state.nftList, fundAddress, nftList);
+    setNftListInAddress(state, data) {
+      state.dataList_MyNFTs = data;
     },
-    setDataList_WrappedNFTs(state,data){
+    setDataList_WrappedNFTs(state, data) {
       state.dataList_WrappedNFTs = data;
     },
-    setDataList_ManagedNFTs(state,data){
+    setDataList_ManagedNFTs(state, data) {
       state.dataList_ManagedNFTs = data;
     },
-    setDataList_PlayerAccess(state,data){
+    setDataList_PlayerAccess(state, data) {
       state.dataList_PlayerAccess = data;
-    },    
+    },
   },
   actions: {
-    async getData({state,commit}, {component}) {
+    async getData({ state, commit }, { component }) {
       var address = state.walletModule.account;
-      console.log(address);      
-      if(component==="WrappedNFTs"){
-        var wrapped_nfts = tokensQuery.replace('here', 'owner');
+      if (address == "" || address == null) return;
+
+      if (component === "WrappedNFTs") {
+        var wrapped_nfts = tokensQuery.replace("here", "owner");
         var dataWrappedNFTs = await client.query(wrapped_nfts).toPromise();
-        console.log(dataWrappedNFTs.data);
-        commit("setDataList_WrappedNFTs",dataWrappedNFTs.data);
+
+        commit("setDataList_WrappedNFTs", dataWrappedNFTs.data);
         return dataWrappedNFTs;
-    }
-    else if(component==="ManagedNFTs"){
-      var managed_nfts = tokensQuery.replace('here', 'approved');
-      var dataManagedNFTs = await client.query(managed_nfts).toPromise();
-      console.log(dataManagedNFTs.data);
-      commit("setDataList_ManagedNFTs",dataManagedNFTs.data);
-      return dataManagedNFTs;
-    }
-    else if(component==="PlayerAccess"){
-      var player_access = tokensQuery.replace('here', 'user');
-      var dataPlayerAccess = await client.query(player_access).toPromise();
-      console.log(dataPlayerAccess.data);
-      commit("setDataList_PlayerAccess",dataPlayerAccess.data);
-      return dataPlayerAccess;
-    }
-    
-      
+      } else if (component === "ManagedNFTs") {
+        var managed_nfts = tokensQuery.replace("here", "approved");
+        var dataManagedNFTs = await client.query(managed_nfts).toPromise();
+
+        commit("setDataList_ManagedNFTs", dataManagedNFTs.data);
+        return dataManagedNFTs;
+      } else if (component === "PlayerAccess") {
+        var player_access = tokensQuery.replace("here", "user");
+        var dataPlayerAccess = await client.query(player_access).toPromise();
+
+        commit("setDataList_PlayerAccess", dataPlayerAccess.data);
+        return dataPlayerAccess;
+      }
     },
-    async getNFTsInAddress({ commit }) {
-      //const address = this.$store.state.accounnt;
-      const address = "0xe95C4707Ecf588dfd8ab3b253e00f45339aC3054";
+
+    async getNFTsInAddress({ commit, state }) {
+      const address = state.walletModule.account;
+
+      if (address == "" || address == null) return;
       const options = { chain: "rinkeby", address: address };
       const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
 
-      commit("setNftListInAddress", { nftList: nftsInAddress["result"], fundAddress: address });
+      commit("setNftListInAddress", nftsInAddress["result"]);
       return nftsInAddress;
+    },
+
+    async refreshData() {
+      this.dispatch("getNFTsInAddress");
+      await this.dispatch("getData", { component: "WrappedNFTs" });
+      await this.dispatch("getData", { component: "ManagedNFTs" });
+      await this.dispatch("getData", { component: "PlayerAccess" });
     },
 
     async getNFTContract({ state }, nftAddress) {
@@ -107,7 +113,6 @@ export default new Vuex.Store({
 
     async getWrapNFTContract({ state }) {
       try {
-        console.log(state.wrappingProtocol);
         var rentProtocolChecksum = Web3.utils.toChecksumAddress(state.wrappingProtocol);
         var rentProtContract = new state.walletModule.web3.eth.Contract(rentalProtAbi, rentProtocolChecksum);
         return rentProtContract;
@@ -143,13 +148,16 @@ export default new Vuex.Store({
 
     async transfer({ state }, transferNFTDetails) {
       try {
+        console.log(transferNFTDetails);
         var rentProtContract = await this.dispatch("getWrapNFTContract");
+        console.log(state.walletModule.account);
         await rentProtContract.methods
           .safeTransferFrom(state.walletModule.account, transferNFTDetails.to, transferNFTDetails.tokenId)
           .send({
             from: state.walletModule.account,
           });
       } catch (error) {
+        console.log("error");
         console.log(error);
         return null;
       }
