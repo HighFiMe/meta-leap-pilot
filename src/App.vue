@@ -1,9 +1,11 @@
 <template>
-  <v-app>
-    <v-app-bar
+  <v-app theme="theme">
+    <v-main class="primary">
+    <v-app-bar class="plain"
       style="margin: 4px; border-radius: 10px; border-color: black; border-width: medium; max-height: 70px"
       outlined
       elevation="0"
+      
     >
       <div class="d-flex align-center" style="padding-left: 20px; font-size: 1.5em">
         <h2>meta leap</h2>
@@ -14,11 +16,12 @@
       <div class="d-flex align-center" style="padding-right: 24px">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
+            <v-btn 
               v-if="!$store.state.walletModule.account"
               depressed
               v-bind="attrs"
               v-on="on"
+              color="accent"
               style="text-transform: unset !important; background: lightgrey; font-size: 1.2em"
             >
               connect wallet
@@ -36,15 +39,15 @@
       </div>
     </v-app-bar>
 
-    <v-main>
-      <div style="padding-top: 10px">
-        <v-btn-toggle v-model="toggle_none">
-          <v-btn
+    <v-main class="primary">
+      <div style="padding-top: 10px; color: primary" >
+        <v-btn-toggle v-model="toggle_none" class="primary">
+          <v-btn class="primary--text"
             depressed
             href=""
+            color="plain"
             style="
               text-transform: unset !important;
-              background: lightgrey;
               margin-left: 20px;
               font-size: 1.2em;
               border-radius: 4px;
@@ -53,9 +56,10 @@
           >
             my collection
           </v-btn>
-          <v-btn
+          <v-btn class="primary--text"
             depressed
             href=""
+            color="plain"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -67,9 +71,10 @@
           >
             Wrapped NFT's
           </v-btn>
-          <v-btn
+          <v-btn class="primary--text"
             depressed
             href=""
+            color="plain"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -81,9 +86,10 @@
           >
             managed nfts
           </v-btn>
-          <v-btn
+          <v-btn class="primary--text"
             depressed
             href=""
+            color="plain"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -109,6 +115,7 @@
       <div v-show="toggle_none == 3">
         <PlayerAccess />
       </div>
+    </v-main>
     </v-main>
   </v-app>
 </template>
