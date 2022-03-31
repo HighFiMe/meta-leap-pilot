@@ -4,8 +4,8 @@ FROM node:14.18.3
 WORKDIR /app
 
 # install and cache app dependencies
-COPY package*.json ./
-RUN rm -f ./package-lock.json
+COPY package.json ./
+RUN rm -rf ./package-lock.json
 RUN npm install
 COPY . .
 RUN npm run build
