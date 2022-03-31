@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import Moralis from "../plugins/moralis";
 import walletModule from "./wallet.js";
 import Web3 from "web3";
-import { createClient } from "urql";
+import { createClient, dedupExchange, cacheExchange, fetchExchange } from "urql";
 
 Vue.use(Vuex);
 
@@ -27,6 +27,8 @@ const tokensQuery = `
 `;
 const client = createClient({
   url: APIURL,
+  exchanges: [dedupExchange, cacheExchange, fetchExchange],
+  requestPolicy: "network-only",
 });
 
 export default new Vuex.Store({
