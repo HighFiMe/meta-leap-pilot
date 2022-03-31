@@ -15,7 +15,7 @@ const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
 //const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
   query {
-  nfts(where: {here: "0x0b3074cd5891526420d493b13439f3d4b8be6144"}) {
+  nfts(where: {KEY: "VALUE"}) {
     id
     tokenId
     tokenURI
@@ -35,7 +35,7 @@ export default new Vuex.Store({
   },
   state: {
     dataList_MyNFTs: [],
-    wrappingProtocol: "0x52F759C37328B9333A508271E1f54e8e66e00CB1",
+    wrappingProtocol: "0x7228278aA8E50eB3f82559AcCd36C37eF74a8704",
     dataList_WrappedNFTs: {},
     dataList_ManagedNFTs: {},
     dataList_PlayerAccess: {},
@@ -61,19 +61,25 @@ export default new Vuex.Store({
       if (address == "" || address == null) return;
 
       if (component === "WrappedNFTs") {
-        var wrapped_nfts = tokensQuery.replace("here", "owner");
+        console.log("here wrpped");
+        var wrapped_nfts = tokensQuery.replace("KEY", "owner");
+        wrapped_nfts = wrapped_nfts.replace("VALUE", address);
         var dataWrappedNFTs = await client.query(wrapped_nfts).toPromise();
 
         commit("setDataList_WrappedNFTs", dataWrappedNFTs.data);
         return dataWrappedNFTs;
       } else if (component === "ManagedNFTs") {
-        var managed_nfts = tokensQuery.replace("here", "approved");
+        console.log("here managed");
+        var managed_nfts = tokensQuery.replace("KEY", "approved");
+        managed_nfts = managed_nfts.replace("VALUE", address);
         var dataManagedNFTs = await client.query(managed_nfts).toPromise();
 
         commit("setDataList_ManagedNFTs", dataManagedNFTs.data);
         return dataManagedNFTs;
       } else if (component === "PlayerAccess") {
-        var player_access = tokensQuery.replace("here", "user");
+        console.log("player managed");
+        var player_access = tokensQuery.replace("KEY", "user");
+        player_access = player_access.replace("VALUE", address);
         var dataPlayerAccess = await client.query(player_access).toPromise();
 
         commit("setDataList_PlayerAccess", dataPlayerAccess.data);

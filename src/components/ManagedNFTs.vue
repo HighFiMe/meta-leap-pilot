@@ -6,7 +6,7 @@
       </v-row>
       <v-row v-else>
         <v-dialog
-          v-for="nft in getNFTs"
+          v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
           :key="nft.tokenId"
           :retain-focus="false"
           persistent
@@ -23,14 +23,25 @@
                 </v-card>
               </v-row>
               <v-row justify="center">
-                <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft.tokenId)"> Options </v-btn>
+                <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft)"> Options </v-btn>
               </v-row>
             </div>
           </template>
           <v-card>
             <v-card-text>
               <v-container>
-                <v-text-field v-model="address" label="Enter Address"></v-text-field>
+                <v-row>
+                  <v-col>Owner: {{ owner }} </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>Manager: {{ approved || "None" }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>Player: {{ player || owner }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-text-field v-model="address" label="Enter Address"></v-text-field>
+                </v-row>
               </v-container>
             </v-card-text>
             <v-divider></v-divider>
@@ -55,6 +66,9 @@ export default {
   data: () => ({
     dialog: false,
     address: "",
+    owner: "",
+    approved: "",
+    user: "",
   }),
   computed: {
     getNFTs() {
@@ -76,8 +90,12 @@ export default {
     },*/
   },
   methods: {
-    open_dialog(tokenId) {
-      this.tokenId = tokenId;
+    open_dialog(nft) {
+      this.tokenId = nft.tokenId;
+      this.user = nft.user;
+      this.owner = nft.owner;
+      this.approved = nft.approved;
+
       this.dialog = true;
     },
     submit(buttonType) {
@@ -104,6 +122,17 @@ export default {
         });
 
       this.dialog = false;
+    },
+    showNFT(nft) {
+      let account = this.$store.state.walletModule.account;
+      if (account == null || account == "") {
+        return false;
+      }
+
+      if (account == nft.approved) {
+        return true;
+      }
+      return false;
     },
   },
   async mounted() {
