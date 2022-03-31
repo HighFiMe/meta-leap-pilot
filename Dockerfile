@@ -5,7 +5,7 @@ WORKDIR /app
 
 # install and cache app dependencies
 COPY package*.json ./
-rm -f ./package-lock.json
+rm -f ./gpackage-lock.json
 RUN npm install
 COPY . .
 RUN npm run build
