@@ -158,7 +158,7 @@ export default new Vuex.Store({
         var rentProtContract = await this.dispatch("getWrapNFTContract");
         console.log(state.walletModule.account);
         await rentProtContract.methods
-          .safeTransferFrom(state.walletModule.account, transferNFTDetails.to, transferNFTDetails.tokenId)
+          .safeTransferFrom(transferNFTDetails.from, transferNFTDetails.to, transferNFTDetails.tokenId)
           .send({
             from: state.walletModule.account,
           });

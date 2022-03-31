@@ -44,7 +44,7 @@ export default {
       if (account == nft.user) {
         return true;
       }
-      return false;
+      return true;
     },
   },
   async mounted() {

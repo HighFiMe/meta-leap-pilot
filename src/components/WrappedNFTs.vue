@@ -31,13 +31,18 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col>Owner: {{ owner }}</v-col>
+                  <v-col>Owner: {{ owner }} </v-col>
                 </v-row>
                 <v-row>
-                  <v-col>Manager: {{ approved || "None" }}</v-col>
+                  <v-col
+                    >Manager:
+                    {{
+                      approved == "0x0000000000000000000000000000000000000000" ? "No Manager assigned" : approved
+                    }}</v-col
+                  >
                 </v-row>
                 <v-row>
-                  <v-col>Player: {{ user || owner }}</v-col>
+                  <v-col>Player: {{ player || "No player assigned" }}</v-col>
                 </v-row>
                 <v-row>
                   <v-text-field v-model="address" label="Enter Address"></v-text-field>
@@ -47,11 +52,10 @@
             <v-divider></v-divider>
 
             <v-card-actions>
+              <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Change Manager </v-btn>
+              <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
-
-              <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Approve </v-btn>
-              <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -123,6 +127,7 @@ export default {
       }
 
       this.$store.dispatch(action, {
+        from: this.user,
         to: this.address,
         tokenId: this.tokenId,
       });
