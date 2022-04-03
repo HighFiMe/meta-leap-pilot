@@ -141,7 +141,7 @@ export default {
   },
 
   data: () => ({
-    toggle_none: null,
+    toggle_none: 0,
     example1: "",
     items: [
       {

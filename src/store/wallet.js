@@ -26,6 +26,7 @@ export default  {
         window.web3 = new Web3(window.ethereum);
         commit("setWeb3", window.web3);
         const address = accounts.result[0];
+        this.dispatch("refreshData");
         commit("setAccount", address);
         console.log(address);
       },
