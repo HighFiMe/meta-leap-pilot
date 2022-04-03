@@ -26,7 +26,7 @@
             >
               connect wallet
             </v-btn>
-            <v-btn v-else depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
+            <v-btn v-else  depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
               $store.state.walletModule.account
             }}</v-btn>
           </template>
