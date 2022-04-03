@@ -54,6 +54,8 @@
             <v-card-actions>
               <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Change Manager </v-btn>
               <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
+              <v-btn color="primary" text @click="submit('unwrap', nft.tokenId)"> Un-wrap NFT </v-btn>
+
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
             </v-card-actions>
