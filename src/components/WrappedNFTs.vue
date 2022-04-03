@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="getNFTs == null" style="text-align: center" align="center" justify="center">
+      <v-row v-if="getNFTs == null || getNFTs.length == 0" style="text-align: center" align="center" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
       <v-row v-else>
@@ -23,7 +23,7 @@
                 </v-card>
               </v-row>
               <v-row justify="center">
-                <v-btn color="primary" dark v-bind="attrs" v-on:click="open_dialog(nft)"> Options </v-btn>
+                <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft)"> Options </v-btn>
               </v-row>
             </div>
           </template>
@@ -42,7 +42,7 @@
                   >
                 </v-row>
                 <v-row>
-                  <v-col>Player: {{ player || "No player assigned" }}</v-col>
+                  <v-col>Player: {{ user || "No player assigned" }}</v-col>
                 </v-row>
                 <v-row>
                   <v-text-field v-model="address" label="Enter Address"></v-text-field>
@@ -86,7 +86,7 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList_WrappedNFTs.nfts == null || this.$store.state.dataList_WrappedNFTs.nfts == {})
+      if (this.$store.state.dataList_WrappedNFTs.nfts == null || this.$store.state.dataList_WrappedNFTs.nfts == [])
         return null;
       return this.$store.state.dataList_WrappedNFTs.nfts;
     },

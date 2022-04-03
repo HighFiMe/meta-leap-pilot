@@ -25,7 +25,7 @@ export default {
   data: () => ({}),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList_PlayerAccess.nfts == null || this.$store.state.dataList_PlayerAccess.nfts == {})
+      if (this.$store.state.dataList_PlayerAccess.nfts == null || this.$store.state.dataList_PlayerAccess.nfts == [])
         return null;
       return this.$store.state.dataList_PlayerAccess.nfts;
     },

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="getNFTs === null" style="text-align: center" align="center" justify="center" class="plain--text">
+      <v-row v-if="getNFTs == null || getNFTs.length == 0" style="text-align: center" align="center" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
       <v-row v-else>
@@ -42,7 +42,7 @@
                   >
                 </v-row>
                 <v-row>
-                  <v-col>Player: {{ player || "No player assigned" }}</v-col>
+                  <v-col>Player: {{ player != "" ? player : "No player assigned" }}</v-col>
                 </v-row>
                 <v-row>
                   <v-text-field v-model="address" label="Enter Address"></v-text-field>
@@ -77,7 +77,7 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList_ManagedNFTs.nfts == null || this.$store.state.dataList_ManagedNFTs.nfts == {})
+      if (this.$store.state.dataList_ManagedNFTs.nfts == null || this.$store.state.dataList_ManagedNFTs.nfts == [])
         return null;
       return this.$store.state.dataList_ManagedNFTs.nfts;
     },
