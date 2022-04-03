@@ -6,7 +6,7 @@
       </v-row>
       <v-row v-else>
         <v-col
-          v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri))"
+          v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri, nft.contract_type))"
           :key="nft.token_id"
           cols="4"
           height="330"
