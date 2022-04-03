@@ -18,6 +18,8 @@ const tokensQuery = `
   nfts(where: {KEY: "VALUE"}) {
     id
     tokenId
+    unwrappedTokenAddress
+    unwrappedTokenId
     tokenURI
     approved
     owner 
@@ -134,6 +136,21 @@ export default new Vuex.Store({
       try {
         var nftContract = await this.dispatch("getNFTContract", wrapDetails.nftAddress);
         await nftContract.methods.safeTransferFrom(wrapDetails.from, state.wrappingProtocol, wrapDetails.tokenId).send({
+          from: state.walletModule.account,
+        });
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
+
+    async unwrapNFT({state}, {
+        unwrappedTokenAddress,
+        unwrappedTokenId
+      }) {
+      try {
+        var rentProtContract = await this.dispatch("getWrapNFTContract");
+        await rentProtContract.methods.withdraw(unwrappedTokenAddress, unwrappedTokenId).send({
           from: state.walletModule.account,
         });
       } catch (error) {

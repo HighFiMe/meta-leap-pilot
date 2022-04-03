@@ -11,7 +11,7 @@
           :retain-focus="false"
           persistent
           v-model="dialog"
-          max-width="450"
+          max-width="600"
         >
           <template v-slot:activator="{ on, attrs }">
             <div class="wNFT-card">
@@ -54,8 +54,7 @@
             <v-card-actions>
               <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Change Manager </v-btn>
               <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
-              <v-btn color="primary" text @click="submit('unwrap', nft.tokenId)"> Un-wrap NFT </v-btn>
-
+              <v-btn color="primary" text @click="unwrap(nft.unwrappedTokenAddress, nft.unwrappedTokenId)"> Un-wrap NFT </v-btn>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
             </v-card-actions>
@@ -132,6 +131,20 @@ export default {
         from: this.user,
         to: this.address,
         tokenId: this.tokenId,
+      });
+
+      this.dialog = false;
+    },
+    unwrap(unwrappedTokenAddress, unwrappedTokenId) {
+      let account = this.$store.state.walletModule.account;
+      if (account == "" || account == null) {
+        this.$vToastify.warning("Connect your wallet please");
+        return;
+      }
+
+      this.$store.dispatch("unwrapNFT", {
+        unwrappedTokenAddress,
+        unwrappedTokenId
       });
 
       this.dialog = false;

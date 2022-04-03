@@ -26,12 +26,12 @@
             >
               connect wallet
             </v-btn>
-            <v-btn v-else  depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
+            <v-btn v-else depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
               $store.state.walletModule.account
             }}</v-btn>
           </template>
           <v-list>
-            <v-list-item v-for="(item, index) in items" :key="index" link @click="handleClick(index)">
+            <v-list-item v-for="(item, index) in items" :key="index" :disabled="item.disabled" link @click="handleClick(index)">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -146,6 +146,7 @@ export default {
     items: [
       {
         title: "Metamask Login",
+        diabled: false,
         click() {
           this.$store.dispatch("connectToMetamask").walletModule;
           // console.log(window.ethereum.request({ method: 'eth_accounts' }))
@@ -153,6 +154,7 @@ export default {
       },
       {
         title: "walletconnect",
+        disabled: true,
         click() {
           this.$store.dispatch("connectToWalletconnect").walletModule;
           // console.log(window.ethereum.request({ method: 'eth_accounts' }))
