@@ -66,10 +66,10 @@ export default {
         tokenId: tokenId,
       });
     },
-    showNFT(symbol, tokenUri) {
+    showNFT(symbol, tokenUri, contractType) {
       console.log(symbol, tokenUri);
-      if (symbol != "wNFT") {
-        if (tokenUri != "" && tokenUri != null && tokenUri != "abcd") {
+      if (symbol != "wNFT" && contractType == "ERC721") {
+        if (tokenUri != "" && tokenUri != null && tokenUri != "abcd" ) {
           return true;
         }
       }

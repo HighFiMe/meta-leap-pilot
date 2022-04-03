@@ -23,7 +23,8 @@
                 </v-card>
               </v-row>
               <v-row justify="center">
-                <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft)"> Options </v-btn>
+                <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft)" style="margin-right:5px;"> Options </v-btn>
+                <v-btn color="accent" dark @click="unwrap(nft.unwrappedTokenAddress, nft.unwrappedTokenId)"> Un-wrap NFT </v-btn>
               </v-row>
             </div>
           </template>
@@ -54,7 +55,7 @@
             <v-card-actions>
               <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Change Manager </v-btn>
               <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
-              <v-btn color="primary" text @click="unwrap(nft.unwrappedTokenAddress, nft.unwrappedTokenId)"> Un-wrap NFT </v-btn>
+              
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
             </v-card-actions>
