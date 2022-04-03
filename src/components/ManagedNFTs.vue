@@ -42,7 +42,7 @@
                   >
                 </v-row>
                 <v-row>
-                  <v-col>Player: {{ player != "" ? player : "No player assigned" }}</v-col>
+                  <v-col>Player: {{ user || "No player assigned" }}</v-col>
                 </v-row>
                 <v-row>
                   <v-text-field v-model="address" label="Enter Address"></v-text-field>
