@@ -81,7 +81,7 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleWithdraw(event: Withdraw): void {
-  let nft_id = event.params.burnedTokenId.toHex();
+  let nft_id = event.params.burnedTokenId.toString();
   let nft = Nft.load(nft_id);
 
   store.remove("Nft", nft_id);

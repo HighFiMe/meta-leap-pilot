@@ -181,7 +181,9 @@ export default {
   async mounted() {
     let a = 1;
     let b = 1;
-    this.$store.dispatch("connectToMetamask");
+    this.$store.dispatch("connectToMetamask").then(() => {
+      this.$store.dispatch("refreshData");
+    });
     while (a == b) {
       await sleep(10000);
       await this.$store.dispatch("refreshData");
