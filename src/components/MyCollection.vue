@@ -25,9 +25,16 @@
                 <v-card-subtitle class="plain--text">Token Id: {{ nft.token_id }}</v-card-subtitle>
                 <v-card-subtitle class="plain--text"></v-card-subtitle>
               </v-card>
-              <v-btn
+              <!-- <v-btn
                 color="accent"
                 v-on:click="wrapNFT(nft.owner_of, nft.token_address, nft.token_id)"
+                style="text-align: center"
+              >
+                Wrap NFT
+              </v-btn> -->
+              <v-btn
+                color="accent"
+                v-on:click="testButton(nft.token_uri)"
                 style="text-align: center"
               >
                 Wrap NFT
@@ -43,6 +50,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import loadingScreen from './loadingScreen.vue';
 
 export default {
@@ -84,12 +92,14 @@ export default {
         if (tokenUri != "" && tokenUri != null && tokenUri != "abcd" ) {
           return true;
         }
-      }
-      return false;
+        return false;
+      },
+      // testButton(url) {
+      //   this.fetchUrlDetails(url);
+      // }
     },
-  },
-  async mounted() {
-    await this.$store.dispatch("getNFTsInAddress");
-  },
-};
+    async mounted() {
+      await this.$store.dispatch("getNFTsInAddress");
+    }
+  };
 </script>
