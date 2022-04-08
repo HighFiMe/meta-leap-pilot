@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^2.0.6",
     "@walletconnect/web3-provider": "^1.7.4",
     "core-js": "^3.6.5",
