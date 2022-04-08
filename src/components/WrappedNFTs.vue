@@ -1,10 +1,15 @@
 <template>
   <v-container>
+    <br>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="getNFTs == null || getNFTs.length == 0" style="text-align: center" align="center" justify="center" class="plain--text">
+      <v-row v-if="this.$store.state.loadList.wrappedNFTs == true && getNFTs == null || getNFTs.length == 0" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
       <v-row v-else>
+        <v-row v-if="this.$store.state.loadList.wrappedNFTs == false ">
+          <loadingScreen></loadingScreen>
+        </v-row>
+        <v-row v-else>
         <v-dialog
           v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
           :key="nft.tokenId"
@@ -61,9 +66,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        </v-row>
       </v-row>
     </v-main>
-    <v-main v-else class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
+    <v-main v-else style="padding-top: 200px;" justify="center" class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
   </v-container>
 </template>
 
@@ -74,10 +80,13 @@
 </style>
 
 <script>
+import loadingScreen from './loadingScreen.vue';
 export default {
   name: "WrappedNFT",
 
-  components: {},
+  components: {
+    loadingScreen,
+  },
 
   data: () => ({
     address: "",
@@ -88,9 +97,9 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList_WrappedNFTs.nfts == null || this.$store.state.dataList_WrappedNFTs.nfts == [])
+      if (this.$store.state.dataList.wrappedNFTs.nfts == null || this.$store.state.dataList.wrappedNFTs.nfts == [] || this.$store.state.dataList.wrappedNFTs.nfts.length == 0)
         return null;
-      return this.$store.state.dataList_WrappedNFTs.nfts;
+      return this.$store.state.dataList.wrappedNFTs.nfts;
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

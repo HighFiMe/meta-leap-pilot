@@ -38,25 +38,28 @@ export default new Vuex.Store({
     walletModule,
   },
   state: {
-    dataList_MyNFTs: [],
+    dataList:{myNFTs : [], wrappedNFTs : [], managedNFTs : [], playerAccess : []},
     wrappingProtocol: "0x7228278aA8E50eB3f82559AcCd36C37eF74a8704",
-    dataList_WrappedNFTs: {},
-    dataList_ManagedNFTs: {},
-    dataList_PlayerAccess: {},
+    loadList:{myNFTs : false, wrappedNFTs : false, managedNFTs : false, playerAccess : false},
+    
   },
   getters: {},
   mutations: {
     setNftListInAddress(state, data) {
-      state.dataList_MyNFTs = data;
+      state.dataList.myNFTs = data;
+      state.loadList.myNFTs = true;
     },
     setDataList_WrappedNFTs(state, data) {
-      state.dataList_WrappedNFTs = data;
+      state.dataList.wrappedNFTs = data;
+      state.loadList.wrappedNFTs = true;
     },
     setDataList_ManagedNFTs(state, data) {
-      state.dataList_ManagedNFTs = data;
+      state.dataList.managedNFTs = data;
+      state.loadList.managedNFTs = true;
     },
     setDataList_PlayerAccess(state, data) {
-      state.dataList_PlayerAccess = data;
+      state.dataList.playerAccess = data;
+      state.loadList.playerAccess = true;
     },
   },
   actions: {

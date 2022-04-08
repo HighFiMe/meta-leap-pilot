@@ -1,18 +1,23 @@
 <template>
   <v-container>
+    <br>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="getNFTs == null || getNFTs.length == 0" style="text-align: center" align="center" justify="center" class="plain--text">
+      <v-row v-if="this.$store.state.loadList.managedNFTs == true && getNFTs == null || getNFTs.length == 0" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
-      <v-row v-else>
-        <v-dialog
+      <v-row v-else class="text-center">
+        <v-row v-if="this.$store.state.loadList.managedNFTs == false">
+          <loadingScreen></loadingScreen>
+        </v-row>
+        <v-row v-else>
+         <v-dialog
           v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
           :key="nft.tokenId"
           :retain-focus="false"
           persistent
           v-model="dialog"
           max-width="290"
-        >
+         >
           <template v-slot:activator="{ on, attrs }">
             <div class="wNFT-card">
               <v-row>
@@ -57,17 +62,22 @@
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+         </v-dialog>
+        </v-row>
       </v-row>
     </v-main>
-    <v-main v-else class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
+    <v-main v-else style="padding-top: 200px;" justify="center" class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
   </v-container>
 </template>
 
 <script>
+import loadingScreen from './loadingScreen.vue';
 export default {
   name: "ManagedNFTs",
 
+  components:{
+    loadingScreen
+  },
   data: () => ({
     dialog: false,
     address: "",
@@ -77,9 +87,9 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList_ManagedNFTs.nfts == null || this.$store.state.dataList_ManagedNFTs.nfts == [])
+      if (this.$store.state.dataList.managedNFTs.nfts == null || this.$store.state.dataList.managedNFTs.nfts == [] || this.$store.state.dataList.managedNFTs.nfts.length == 0)
         return null;
-      return this.$store.state.dataList_ManagedNFTs.nfts;
+      return this.$store.state.dataList.managedNFTs.nfts;
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

@@ -1,11 +1,16 @@
 <template>
   <v-container>
+    <br>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="getNFTList === null" style="text-align: center" align="center" justify="center" class="plain--text">
+      <v-row v-if="this.$store.state.loadList.myNFTs == true && getNFTList === null" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
       <v-row v-else>
-        <v-col
+        <v-row v-if="this.$store.state.loadList.myNFTs == false">
+          <loadingScreen></loadingScreen>
+        </v-row> 
+        <v-row v-else>
+         <v-col
           v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri, nft.contract_type))"
           :key="nft.token_id"
           cols="4"
@@ -29,24 +34,30 @@
               </v-btn>
             </div>
           </template>
-        </v-col>
+         </v-col>
+        </v-row>
       </v-row>
     </v-main>
-    <v-main v-else class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
+    <v-main v-else style="padding-top: 200px;" justify="center" class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
   </v-container>
 </template>
 
 <script>
+import loadingScreen from './loadingScreen.vue';
+
 export default {
   name: "MyCollection",
 
-  components: {},
+  components: {
+    loadingScreen,
+  },
 
   data: () => ({}),
   computed: {
     getNFTList() {
-      if (this.$store.state.dataList_MyNFTs == null || this.$store.state.dataList_MyNFTs == []) return null;
-      return this.$store.state.dataList_MyNFTs;
+      if (this.$store.state.dataList.myNFTs == null || this.$store.state.dataList.myNFTs == [] || this.$store.state.dataList.myNFTs.length == 0) return null;
+      console.log(this.$store.state.dataList.myNFTs);
+      return this.$store.state.dataList.myNFTs;
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);
@@ -54,6 +65,7 @@ export default {
     },
   },
   methods: {
+     
     async wrapNFT(ownerOf, tokenAddress, tokenId) {
       let account = this.$store.state.walletModule.account;
       if (account == null || account == "") {

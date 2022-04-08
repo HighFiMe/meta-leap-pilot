@@ -41,11 +41,11 @@
 
     <v-main class="primary">
       <div style="padding-top: 10px; color: primary" >
-        <v-btn-toggle v-model="toggle_none" class="primary">
-          <v-btn class="primary--text"
-            depressed
+        <v-btn-toggle v-model="toggle_none" class="primary" >
+          <v-btn class="plain--text"
+            
             href=""
-            color="plain"
+            color="accent"
             style="
               text-transform: unset !important;
               margin-left: 20px;
@@ -53,13 +53,14 @@
               border-radius: 4px;
               padding: 0px 24px;
             "
+            
           >
             my collection
           </v-btn>
-          <v-btn class="primary--text"
-            depressed
+          <v-btn class="plain--text"
+            
             href=""
-            color="plain"
+            color="accent"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -71,10 +72,10 @@
           >
             Wrapped NFT's
           </v-btn>
-          <v-btn class="primary--text"
-            depressed
+          <v-btn class="plain--text"
+            
             href=""
-            color="plain"
+            color="accent"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -86,10 +87,10 @@
           >
             managed nfts
           </v-btn>
-          <v-btn class="primary--text"
-            depressed
+          <v-btn class="plain--text"
+            
             href=""
-            color="plain"
+            color="accent"
             style="
               text-transform: unset !important;
               background: lightgrey;
@@ -125,6 +126,7 @@ import MyCollection from "./components/MyCollection";
 import wrappedNFTs from "./components/WrappedNFTs.vue";
 import ManagedNFTs from "./components/ManagedNFTs";
 import PlayerAccess from "./components/PlayerAccess";
+
 //import axios from 'axios';
 // import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -142,7 +144,7 @@ export default {
 
   data: () => ({
     toggle_none: 0,
-    example1: "",
+    
     items: [
       {
         title: "Metamask Login",
