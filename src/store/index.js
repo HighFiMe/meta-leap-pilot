@@ -78,7 +78,7 @@ export default new Vuex.Store({
         return dataWrappedNFTs;
       } else if (component === "ManagedNFTs") {
         console.log("here managed");
-        var managed_nfts = tokensQuery.replace("KEY", "approved");
+        var managed_nfts = tokensQuery.replace("KEY", "manager");
         managed_nfts = managed_nfts.replace("VALUE", address);
         var dataManagedNFTs = await client.query(managed_nfts).toPromise();
 
@@ -101,8 +101,7 @@ export default new Vuex.Store({
       if (address == "" || address == null) return;
       const options = { chain: "rinkeby", address: address };
       const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
-      //console.log(nftsInAddress);
-      console.log(JSON.parse(nftsInAddress["result"][3].metadata).image);
+      
       commit("setNftListInAddress", nftsInAddress["result"]);
       return nftsInAddress;
     },

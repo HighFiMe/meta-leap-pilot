@@ -64,8 +64,7 @@ export default {
   computed: {
     getNFTList() {
       if (this.$store.state.dataList.myNFTs == null || this.$store.state.dataList.myNFTs == [] || this.$store.state.dataList.myNFTs.length == 0) return null;
-      console.log(this.$store.state.dataList.myNFTs);
-      console.log(this.$store.state.dataList.myNFTs[3].metadata.slice(2,7));
+      
       return this.$store.state.dataList.myNFTs;
     },
     getConnectedAccount() {
@@ -89,7 +88,6 @@ export default {
     },
     showNFT(symbol, tokenUri, contractType) {
       console.log(symbol, tokenUri);
-      console.log(this.getNFTList.metadata);
       if (symbol != "wNFT" && contractType == "ERC721") {
         if (tokenUri != "" && tokenUri != null && tokenUri != "abcd" ) {
           return true;
@@ -98,18 +96,18 @@ export default {
       }
     },
     isOpenseaURL(metadata) {
-      if(JSON.parse(metadata)!=null){
+      if(metadata!= null && JSON.parse(metadata)!=null){
         //console.log(JSON.parse(metadata).image);
         return true;
       }
       return false;
     },
     getOpenseaUrl(metadata){
-      if(JSON.parse(metadata).image.startsWith("https")){
+      if(metadata != null && JSON.parse(metadata).image.startsWith("https")){
         //console.log(metadata.image).startsWith("https");
         return JSON.parse(metadata).image;
       }
-      console.log(JSON.parse(metadata).image);
+
       var url = this.openseaStartUrl + JSON.parse(metadata).image.slice(7);
       //console.log(url);
       return url;
