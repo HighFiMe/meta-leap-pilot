@@ -14,6 +14,8 @@ import {convertNFTListToMap, getNFTDictOperations} from "./utils.js";
 
 Vue.use(Vuex);
 
+let sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function getImageFromOpenseaAssetData({ collectionAddress, collectionTokenId, tokenUri }) {
   try{
     var opensea_url =
@@ -161,12 +163,14 @@ export default new Vuex.Store({
       for (let index in operations.insert) {
         key = operations.insert[index];
         if (!(incomingDict[key]['tokenURI'].includes('googleusercontent'))) {
+          console.log('requests made');
           incomingDict[key]['image'] = await getImageFromOpenseaAssetData(
             {
               collectionAddress: incomingDict[key]['collectionAddress'], 
               collectionTokenId: incomingDict[key]['collectionTokenId'], 
               tokenUri: incomingDict[key]['tokenUri']
-            })
+            });
+           await sleep(1000);
         }else{
           incomingDict[key]['image'] = incomingDict[key]['tokenURI'];
         }
@@ -192,7 +196,11 @@ export default new Vuex.Store({
     async refreshData() {
       this.dispatch("getNFTsInAddress");
       await this.dispatch("getData", { component: "WrappedNFTs" });
+      await sleep(1000);
+      console.log('here');
       await this.dispatch("getData", { component: "ManagedNFTs" });
+      await sleep(1000);
+      console.log('here');
       await this.dispatch("getData", { component: "PlayerAccess" });
     },
 
