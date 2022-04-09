@@ -10,9 +10,9 @@
             <loadingScreen></loadingScreen>
         </v-row>
         <v-row v-else>
-         <v-col v-for="nft in getNFTs.filter((nft) => showNFT(nft))" :key="nft.leapTokenId" cols="4">
+         <v-col v-for="(nft, key) in getNFTs" :key="key" cols="4">
            <v-card class="secondary">
-            <v-img :src="nft.tokenURI" />
+            <v-img :src="nft.image" />
             <v-card-title class="plain--text">NAME</v-card-title>
             <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
           </v-card>
@@ -35,9 +35,10 @@ export default {
   data: () => ({}),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList.playerAccess.nfts == null || this.$store.state.dataList.playerAccess.nfts == [] || this.$store.state.dataList.playerAccess.nfts.length == 0)
+      var playerAccess = this.$store.state.NFTData.playerAccess;
+      if (playerAccess == null || playerAccess == [] || playerAccess == 0)
         return null;
-      return this.$store.state.dataList.playerAccess.nfts;
+      return Object.values(playerAccess).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

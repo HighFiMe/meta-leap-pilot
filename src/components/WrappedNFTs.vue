@@ -11,8 +11,8 @@
         </v-row>
         <v-row v-else>
         <v-dialog
-          v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
-          :key="nft.leapTokenId"
+          v-for="(nft, key) in getNFTs"
+          :key="key"
           :retain-focus="false"
           persistent
           v-model="dialog"
@@ -22,10 +22,7 @@
             <div class="wNFT-card">
               <v-row>
                 <v-card class="secondary">
-                  <v-text>{{nft.tokenURI}}</v-text>
-                  <!--<v-text>{{isOpenseaURL(nft.tokenURI)}}</v-text>-->
-                  <!--<v-text v-if="isOpenseaURL(nft.tokenURI) == true">hey</v-text>-->
-                  <v-img :src="nft.tokenURI" height="250" width="300" />
+                  <v-img :src="nft.image" height="250" width="300" />
                   <v-card-title class="plain--text">NAME</v-card-title>
                   <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
                 </v-card>
@@ -102,9 +99,10 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList.wrappedNFTs.nfts == null || this.$store.state.dataList.wrappedNFTs.nfts == [] || this.$store.state.dataList.wrappedNFTs.nfts.length == 0)
+      var wrappedNFTs = this.$store.state.NFTData.wrappedNFTs;
+      if (wrappedNFTs == null || wrappedNFTs == [] || wrappedNFTs == 0)
         return null;
-      return this.$store.state.dataList.wrappedNFTs.nfts;
+      return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);
@@ -175,13 +173,18 @@ export default {
       }
       return false;
     },
-    async isOpenseaURL(uri) {
-      var res = await axios.get(uri);
-      console.log(res.data.image);
-      if(res.data.image!=null || res.data.image!= undefined){
-        return true;
-      }
-      return false;
+    async getNFTImage(collectionAddress, collectionTokenId) {
+      var opensea_url = "https://testnets-api.opensea.io/api/v1/asset/TOKEN_ADDRESS/TOKEN_ID"
+      opensea_url = opensea_url.replace("TOKEN_ADDRESS",collectionAddress);
+      opensea_url = opensea_url.replace("TOKEN_ID",collectionTokenId);
+      console.log(opensea_url);
+      var res = await axios.get(opensea_url);
+      console.log(res.data.image_url);
+      // console.log(res.data.image);
+      // if(res.data.image!=null || res.data.image!= undefined){
+      //   return true;
+      // }
+      // return false;
     },
   },
   async mounted() {

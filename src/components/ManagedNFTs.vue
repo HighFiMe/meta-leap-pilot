@@ -11,8 +11,8 @@
         </v-row>
         <v-row v-else>
          <v-dialog
-          v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
-          :key="nft.leapTokenId"
+          v-for="(nft, key) in getNFTs"
+          :key="key"
           :retain-focus="false"
           persistent
           v-model="dialog"
@@ -22,7 +22,7 @@
             <div class="wNFT-card">
               <v-row>
                 <v-card class="secondary">
-                  <v-img :src="nft.tokenURI" height="250" width="300" />
+                  <v-img :src="nft.image" height="250" width="300" />
                   <v-card-title class="plain--text">NAME</v-card-title>
                   <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
                 </v-card>
@@ -87,9 +87,10 @@ export default {
   }),
   computed: {
     getNFTs() {
-      if (this.$store.state.dataList.managedNFTs.nfts == null || this.$store.state.dataList.managedNFTs.nfts == [] || this.$store.state.dataList.managedNFTs.nfts.length == 0)
+      var managedNFTs = this.$store.state.NFTData.managedNFTs;
+      if (managedNFTs == null || managedNFTs == [] || managedNFTs == 0)
         return null;
-      return this.$store.state.dataList.managedNFTs.nfts;
+      return Object.values(managedNFTs).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

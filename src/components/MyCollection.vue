@@ -63,9 +63,9 @@ export default {
   }),
   computed: {
     getNFTList() {
-      if (this.$store.state.dataList.myNFTs == null || this.$store.state.dataList.myNFTs == [] || this.$store.state.dataList.myNFTs.length == 0) return null;
+      if (this.$store.state.NFTData.myNFTs == null || this.$store.state.NFTData.myNFTs == [] || this.$store.state.NFTData.myNFTs.length == 0) return null;
       
-      return this.$store.state.dataList.myNFTs;
+      return this.$store.state.NFTData.myNFTs;
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);
