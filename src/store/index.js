@@ -16,14 +16,15 @@ const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
 const tokensQuery = `
   query {
   nfts(where: {KEY: "VALUE"}) {
-    id
-    tokenId
-    unwrappedTokenAddress
-    unwrappedTokenId
+    leapTokenId
+    collectionAddress
+    collectionTokenId
     tokenURI
-    approved
+    manager
     owner 
     user
+    name 
+    symbol
   }
 }
 `;

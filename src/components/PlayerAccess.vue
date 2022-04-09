@@ -10,11 +10,11 @@
             <loadingScreen></loadingScreen>
         </v-row>
         <v-row v-else>
-         <v-col v-for="nft in getNFTs.filter((nft) => showNFT(nft))" :key="nft.id" cols="4">
+         <v-col v-for="nft in getNFTs.filter((nft) => showNFT(nft))" :key="nft.leapTokenId" cols="4">
            <v-card class="secondary">
             <v-img :src="nft.tokenURI" />
             <v-card-title class="plain--text">NAME</v-card-title>
-            <v-card-subtitle class="plain--text">Token Id: {{ nft.tokenId }}</v-card-subtitle>
+            <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
           </v-card>
         </v-col>
         </v-row>

@@ -12,7 +12,7 @@
         <v-row v-else>
         <v-dialog
           v-for="nft in getNFTs.filter((nft) => showNFT(nft))"
-          :key="nft.tokenId"
+          :key="nft.leapTokenId"
           :retain-focus="false"
           persistent
           v-model="dialog"
@@ -24,12 +24,12 @@
                 <v-card class="secondary">
                   <v-img :src="nft.tokenURI" height="250" width="300" />
                   <v-card-title class="plain--text">NAME</v-card-title>
-                  <v-card-subtitle class="plain--text">Token Id: {{ nft.tokenId }}</v-card-subtitle>
+                  <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
                 </v-card>
               </v-row>
               <v-row justify="center">
                 <v-btn color="accent" dark v-bind="attrs" v-on:click="open_dialog(nft)" style="margin-right:5px;"> Options </v-btn>
-                <v-btn color="accent" dark @click="unwrap(nft.unwrappedTokenAddress, nft.unwrappedTokenId)"> Un-wrap NFT </v-btn>
+                <v-btn color="accent" dark @click="unwrap(nft.collectionAddress, nft.collectionTokenId)"> Un-wrap NFT </v-btn>
               </v-row>
             </div>
           </template>
@@ -43,7 +43,7 @@
                   <v-col
                     >Manager:
                     {{
-                      approved == "0x0000000000000000000000000000000000000000" ? "No Manager assigned" : approved
+                      manager == "0x0000000000000000000000000000000000000000" ? "No Manager assigned" : manager
                     }}</v-col
                   >
                 </v-row>
@@ -58,8 +58,8 @@
             <v-divider></v-divider>
 
             <v-card-actions>
-              <v-btn color="primary" text @click="submit('approve', nft.tokenId)"> Change Manager </v-btn>
-              <v-btn color="primary" text @click="submit('transfer', nft.tokenId)"> Change Player </v-btn>
+              <v-btn color="primary" text @click="submit('approve', nft.leapTokenId)"> Change Manager </v-btn>
+              <v-btn color="primary" text @click="submit('transfer', nft.leapTokenId)"> Change Player </v-btn>
               
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
@@ -92,7 +92,7 @@ export default {
     address: "",
     dialog: false,
     owner: "",
-    approved: "",
+    manager: "",
     user: "",
   }),
   computed: {
@@ -116,10 +116,10 @@ export default {
   },
   methods: {
     open_dialog(nft) {
-      this.tokenId = nft.tokenId;
+      this.leapTokenId = nft.leapTokenId;
       this.user = nft.user;
       this.owner = nft.owner;
-      this.approved = nft.approved;
+      this.manager = nft.manager;
 
       this.dialog = true;
     },
@@ -140,12 +140,12 @@ export default {
       this.$store.dispatch(action, {
         from: this.user,
         to: this.address,
-        tokenId: this.tokenId,
+        tokenId: this.leapTokenId,
       });
 
       this.dialog = false;
     },
-    unwrap(unwrappedTokenAddress, unwrappedTokenId) {
+    unwrap(collectionAddress, collectionTokenId) {
       let account = this.$store.state.walletModule.account;
       if (account == "" || account == null) {
         this.$vToastify.warning("Connect your wallet please");
@@ -153,8 +153,8 @@ export default {
       }
 
       this.$store.dispatch("unwrapNFT", {
-        unwrappedTokenAddress,
-        unwrappedTokenId
+        collectionAddress,
+        collectionTokenId
       });
 
       this.dialog = false;
