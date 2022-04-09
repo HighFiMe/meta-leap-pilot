@@ -22,6 +22,9 @@
             <div class="wNFT-card">
               <v-row>
                 <v-card class="secondary">
+                  <v-text>{{nft.tokenURI}}</v-text>
+                  <!--<v-text>{{isOpenseaURL(nft.tokenURI)}}</v-text>-->
+                  <!--<v-text v-if="isOpenseaURL(nft.tokenURI) == true">hey</v-text>-->
                   <v-img :src="nft.tokenURI" height="250" width="300" />
                   <v-card-title class="plain--text">NAME</v-card-title>
                   <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
@@ -81,6 +84,8 @@
 
 <script>
 import loadingScreen from './loadingScreen.vue';
+import axios from "axios";
+
 export default {
   name: "WrappedNFT",
 
@@ -166,6 +171,14 @@ export default {
       }
 
       if (account == nft.owner) {
+        return true;
+      }
+      return false;
+    },
+    async isOpenseaURL(uri) {
+      var res = await axios.get(uri);
+      console.log(res.data.image);
+      if(res.data.image!=null || res.data.image!= undefined){
         return true;
       }
       return false;
