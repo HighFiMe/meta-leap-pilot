@@ -1,12 +1,16 @@
 type Nft @entity {
   id: ID!
-  tokenId: String
+  leapTokenId: String
   tokenURI: String
-  approved: Bytes
+  manager: Bytes
   user: Bytes
-  unwrappedTokenAddress: Bytes
-  unwrappedTokenId: String
+  collectionAddress: Bytes
+  collectionTokenId: String
   owner: Bytes
   name: String
   symbol: String
+  createdAt: BigInt
+  userUpdatedAt: BigInt
+  managerUpdatedAt: BigInt
 }
+

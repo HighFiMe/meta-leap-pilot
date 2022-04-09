@@ -42,8 +42,8 @@ export class Nft extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get tokenId(): string | null {
-    let value = this.get("tokenId");
+  get leapTokenId(): string | null {
+    let value = this.get("leapTokenId");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -51,11 +51,11 @@ export class Nft extends Entity {
     }
   }
 
-  set tokenId(value: string | null) {
+  set leapTokenId(value: string | null) {
     if (value === null) {
-      this.unset("tokenId");
+      this.unset("leapTokenId");
     } else {
-      this.set("tokenId", Value.fromString(value as string));
+      this.set("leapTokenId", Value.fromString(value as string));
     }
   }
 
@@ -76,8 +76,8 @@ export class Nft extends Entity {
     }
   }
 
-  get approved(): Bytes | null {
-    let value = this.get("approved");
+  get manager(): Bytes | null {
+    let value = this.get("manager");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -85,11 +85,11 @@ export class Nft extends Entity {
     }
   }
 
-  set approved(value: Bytes | null) {
+  set manager(value: Bytes | null) {
     if (value === null) {
-      this.unset("approved");
+      this.unset("manager");
     } else {
-      this.set("approved", Value.fromBytes(value as Bytes));
+      this.set("manager", Value.fromBytes(value as Bytes));
     }
   }
 
@@ -110,8 +110,8 @@ export class Nft extends Entity {
     }
   }
 
-  get unwrappedTokenAddress(): Bytes | null {
-    let value = this.get("unwrappedTokenAddress");
+  get collectionAddress(): Bytes | null {
+    let value = this.get("collectionAddress");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -119,16 +119,16 @@ export class Nft extends Entity {
     }
   }
 
-  set unwrappedTokenAddress(value: Bytes | null) {
+  set collectionAddress(value: Bytes | null) {
     if (value === null) {
-      this.unset("unwrappedTokenAddress");
+      this.unset("collectionAddress");
     } else {
-      this.set("unwrappedTokenAddress", Value.fromBytes(value as Bytes));
+      this.set("collectionAddress", Value.fromBytes(value as Bytes));
     }
   }
 
-  get unwrappedTokenId(): string | null {
-    let value = this.get("unwrappedTokenId");
+  get collectionTokenId(): string | null {
+    let value = this.get("collectionTokenId");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -136,11 +136,11 @@ export class Nft extends Entity {
     }
   }
 
-  set unwrappedTokenId(value: string | null) {
+  set collectionTokenId(value: string | null) {
     if (value === null) {
-      this.unset("unwrappedTokenId");
+      this.unset("collectionTokenId");
     } else {
-      this.set("unwrappedTokenId", Value.fromString(value as string));
+      this.set("collectionTokenId", Value.fromString(value as string));
     }
   }
 
@@ -192,6 +192,57 @@ export class Nft extends Entity {
       this.unset("symbol");
     } else {
       this.set("symbol", Value.fromString(value as string));
+    }
+  }
+
+  get createdAt(): BigInt | null {
+    let value = this.get("createdAt");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdAt(value: BigInt | null) {
+    if (value === null) {
+      this.unset("createdAt");
+    } else {
+      this.set("createdAt", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get userUpdatedAt(): BigInt | null {
+    let value = this.get("userUpdatedAt");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set userUpdatedAt(value: BigInt | null) {
+    if (value === null) {
+      this.unset("userUpdatedAt");
+    } else {
+      this.set("userUpdatedAt", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get managerUpdatedAt(): BigInt | null {
+    let value = this.get("managerUpdatedAt");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set managerUpdatedAt(value: BigInt | null) {
+    if (value === null) {
+      this.unset("managerUpdatedAt");
+    } else {
+      this.set("managerUpdatedAt", Value.fromBigInt(value as BigInt));
     }
   }
 }

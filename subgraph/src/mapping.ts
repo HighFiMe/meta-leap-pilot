@@ -17,7 +17,8 @@ export function handleApproval(event: Approval): void {
     nft = new Nft(event.params.tokenId.toString());
   }
 
-  nft.approved = event.params.approved;
+  nft.manager = event.params.approved;
+  nft.managerUpdatedAt = event.block.timestamp;
   nft.save();
 
   // Note: If a handler doesn't require existing field values, it is faster
@@ -57,13 +58,14 @@ export function handleDeposited(event: Deposited): void {
     nft = new Nft(event.params.newTokenId.toString());
   }
 
-  nft.tokenId = event.params.newTokenId.toString();
+  nft.leapTokenId = event.params.newTokenId.toString();
   nft.owner = event.params.from;
-  nft.unwrappedTokenId = event.params.oldtokenId.toString();
-  nft.unwrappedTokenAddress = event.params.nftContract;
+  nft.collectionTokenId = event.params.oldtokenId.toString();
+  nft.collectionAddress = event.params.nftContract;
   nft.tokenURI = contract.tokenURI(event.params.newTokenId);
   nft.name = contract.name();
   nft.symbol = contract.symbol();
+  nft.createdAt = event.block.timestamp;
 
   nft.save();
 }
@@ -75,7 +77,7 @@ export function handleTransfer(event: Transfer): void {
   if (nft == null) {
     nft = new Nft(event.params.tokenId.toString());
   }
-
+  nft.userUpdatedAt = event.block.timestamp;
   nft.user = event.params.to;
   nft.save();
 }
