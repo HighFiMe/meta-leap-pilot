@@ -20,7 +20,11 @@
           ><template>
             <div>
               <v-card class="secondary">
-                <v-img :src="nft.token_uri" height="250" />
+                <v-text v-if="isOpenseaURL(nft.metadata)== true">
+                  <v-img :src="getOpenseaUrl(nft.metadata)" height="250" width="400" />
+                </v-text>
+                <v-text v-else>        
+                <v-img :src="nft.token_uri" height="250" /></v-text>
                 <v-card-title class="justify-center plain--text">{{ nft.name }}</v-card-title>
                 <v-card-subtitle class="plain--text">Token Id: {{ nft.token_id }}</v-card-subtitle>
                 <v-card-subtitle class="plain--text"></v-card-subtitle>
@@ -54,11 +58,14 @@ export default {
     loadingScreen,
   },
 
-  data: () => ({}),
+  data: () => ({
+    openseaStartUrl: "https://ipfs.io/ipfs/",
+  }),
   computed: {
     getNFTList() {
       if (this.$store.state.dataList.myNFTs == null || this.$store.state.dataList.myNFTs == [] || this.$store.state.dataList.myNFTs.length == 0) return null;
       console.log(this.$store.state.dataList.myNFTs);
+      console.log(this.$store.state.dataList.myNFTs[3].metadata.slice(2,7));
       return this.$store.state.dataList.myNFTs;
     },
     getConnectedAccount() {
@@ -82,12 +89,30 @@ export default {
     },
     showNFT(symbol, tokenUri, contractType) {
       console.log(symbol, tokenUri);
+      console.log(this.getNFTList.metadata);
       if (symbol != "wNFT" && contractType == "ERC721") {
         if (tokenUri != "" && tokenUri != null && tokenUri != "abcd" ) {
           return true;
         }
         return false;
       }
+    },
+    isOpenseaURL(metadata) {
+      if(JSON.parse(metadata)!=null){
+        //console.log(JSON.parse(metadata).image);
+        return true;
+      }
+      return false;
+    },
+    getOpenseaUrl(metadata){
+      if(JSON.parse(metadata).image.startsWith("https")){
+        //console.log(metadata.image).startsWith("https");
+        return JSON.parse(metadata).image;
+      }
+      console.log(JSON.parse(metadata).image);
+      var url = this.openseaStartUrl + JSON.parse(metadata).image.slice(7);
+      //console.log(url);
+      return url;
     },
   },
     async mounted() {

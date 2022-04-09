@@ -100,7 +100,8 @@ export default new Vuex.Store({
       if (address == "" || address == null) return;
       const options = { chain: "rinkeby", address: address };
       const nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
-
+      //console.log(nftsInAddress);
+      console.log(JSON.parse(nftsInAddress["result"][3].metadata).image);
       commit("setNftListInAddress", nftsInAddress["result"]);
       return nftsInAddress;
     },
