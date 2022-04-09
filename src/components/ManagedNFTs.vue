@@ -66,7 +66,7 @@
         </v-row>
       </v-row>
     </v-main>
-    <v-main v-else style="padding-top: 200px;" justify="center" class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
+    <v-main v-else style="padding-top: 200px; padding-left:300px" justify="center" class="plain--text">Connect wallet to see NFTs. The button is in the top right of the page !</v-main>
   </v-container>
 </template>
 
