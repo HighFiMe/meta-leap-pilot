@@ -7,14 +7,13 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "hardhat/console.sol";
 
 
 /**
  * @title Owner
  * @dev Set & change owner
  */
-contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
+contract RentingProt is ERC721Holder, ERC721URIStorage,  Ownable {
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -23,8 +22,8 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
     mapping(uint256 => address) public ownerMap; 
 
 
-    event Deposited(address nftContract, address from, uint256 tokenId, bytes data);
-    event Withdraw(address nftContract, address from, uint256 tokenId);
+    event Deposited(address nftContract, address from, uint256 oldtokenId, uint256 newTokenId, bytes data);
+    event Withdraw(address nftContract, address from, uint256 tokenId, uint256 burnedTokenId);
 
     constructor () ERC721("WrappedNFT", "wNFT")  { }
 
@@ -36,23 +35,25 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
         address from,
         uint256 tokenId,
         bytes memory data) public override returns (bytes4) {
-            emit Deposited(msg.sender, from, tokenId, data);
+            
             uint256 newTokenId = mintWrappedNFT(msg.sender, from, tokenId);
             nftStorageTracker[msg.sender][from][tokenId] = newTokenId;
+            emit Deposited(msg.sender, from, tokenId, newTokenId, data);
             ownerMap[newTokenId] = from;
             return this.onERC721Received.selector;
     }
 
     function withdraw(address nftContract, uint256 tokenId) public {
         require(nftStorageTracker[nftContract][msg.sender][tokenId] != 0, "Sender did not deposit the NFT");
+        emit Withdraw(nftContract, msg.sender, tokenId, nftStorageTracker[nftContract][msg.sender][tokenId]);
         ERC721(nftContract).transferFrom(address(this),
             msg.sender,
             tokenId);
         _burn(nftStorageTracker[nftContract][msg.sender][tokenId]);
+
         ownerMap[tokenId] = address(0);
         nftStorageTracker[nftContract][msg.sender][tokenId] = 0;
         
-        emit Withdraw(nftContract, msg.sender, tokenId);
     }
 
     function mintWrappedNFT(address nftContract, address from, uint256 tokenId) internal returns(uint256){
@@ -75,8 +76,9 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
     ) public virtual override {
         //solhint-disable-next-line max-line-length
         require(_isApprovedOrOriginalOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-
+        address approvedAddress = getApproved(tokenId);
         _transfer(from, to, tokenId);
+        approveInternal(approvedAddress, tokenId);
     }
 
     /**
@@ -99,8 +101,10 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
         uint256 tokenId,
         bytes memory _data
     ) public virtual override {
+        address approvedAddress = getApproved(tokenId);
         require(_isApprovedOrOriginalOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
         _safeTransfer(from, to, tokenId, _data);
+        approveInternal(approvedAddress, tokenId);
     }
 
     /**
@@ -115,6 +119,8 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
         address owner = ownerMap[tokenId];
         return (spender == owner || isApprovedForAll(owner, spender) || getApproved(tokenId) == spender);
     }
+
+ 
     
     /**
      * @dev See {IERC721-approve}.
@@ -127,6 +133,16 @@ contract RentingProt is ERC721Holder, ERC721URIStorage, Ownable {
             _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
             "ERC721: approve caller is not owner nor approved for all"
         );
+
+        _approve(to, tokenId);
+    }
+
+        /**
+     * @dev See {IERC721-approve}.
+     */
+    function approveInternal(address to, uint256 tokenId) internal {
+        address owner = ownerMap[tokenId];
+        require(to != owner, "ERC721: approval to current owner");
 
         _approve(to, tokenId);
     }
