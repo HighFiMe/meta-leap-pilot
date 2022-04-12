@@ -1,11 +1,20 @@
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3 from "web3";
+import Web3Modal from "web3modal";
+
+const web3Modal = new Web3Modal({
+  network: "mainnet", // optional
+  cacheProvider: true, // optional
+  
+});
 
 export default  {
     state: () => ({ 
       web3: null,
       provider: null,
-      account: null,}),
+      account: null,
+      networkId: null,
+    }),
 
     mutations: { 
       setWeb3(state, web3) {
@@ -17,7 +26,11 @@ export default  {
       setAccount(state, account) {
         state.account = account;
         state.web3.eth.defaultAccount = account;
-    }, },
+    }, 
+      setNetworkId(state,NetId){
+        state.networkId = NetId;
+      }
+  },
 
     actions: { 
       async connectToMetamask({ commit }) {
@@ -29,6 +42,26 @@ export default  {
         this.dispatch("refreshData");
         commit("setAccount", address);
         console.log(address);
+        
+        const networkId = await window.web3.eth.net.getId();
+        console.log(networkId);
+        commit("setNetworkId", networkId);
+
+        const provider = await web3Modal.connect();
+
+        provider.on("accountsChanged", async (address) => {
+          if (address.length > 0) {
+            //console.log("changed");
+           // console.log(address[0]);
+            commit("setAccount", address[0]);
+          }
+          console.log("accountsChanged");
+        });
+        provider.on("chainChanged", async (chainId) => {
+          chainId = parseInt(chainId);
+          commit("setChainId", chainId);
+          console.log("chainChanged", chainId);
+        });
       },
     
       async connectToWalletconnect({ commit }) {
