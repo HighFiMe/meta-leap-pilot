@@ -172,6 +172,7 @@ export default {
   },
 
   beforeMount() {
+    // this.$store.dispatch("listeners");
     this.$nextTick(async () => {
       if (window.ethereum.isConnected()) {
         const currAccounts = await window.ethereum.request({ method: "eth_accounts" });

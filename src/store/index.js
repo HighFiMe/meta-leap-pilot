@@ -202,6 +202,7 @@ export default new Vuex.Store({
       await sleep(1000);
       console.log('here');
       await this.dispatch("getData", { component: "PlayerAccess" });
+      // console.log(window.ethereum.isConnected())
     },
 
     async getNFTContract({ state }, nftAddress) {
