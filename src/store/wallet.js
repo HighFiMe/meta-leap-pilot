@@ -33,6 +33,7 @@ export default  {
             {
               console.log("account changed");
               commit("setAccount", accounts[0]);
+              this.dispatch("refreshData");
             }
           } else {
             console.log("disconnected");
