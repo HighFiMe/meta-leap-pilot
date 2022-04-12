@@ -2,7 +2,9 @@ type Nft @entity {
   id: ID!
   leapTokenId: String
   tokenURI: String
-  manager: Bytes
+  userManager: Bytes
+  userManagerUpdatedAt: BigInt
+  manager:Bytes
   user: Bytes
   collectionAddress: Bytes
   collectionTokenId: String

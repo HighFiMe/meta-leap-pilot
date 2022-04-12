@@ -6,7 +6,7 @@ dataSources:
     name: RentingProt
     network: rinkeby
     source:
-      address: "0x7228278aA8E50eB3f82559AcCd36C37eF74a8704"
+      address: "0x268b4fDe69663C1ae1f17b747C5E29F647b3Bdc7"
       abi: RentingProt
     mapping:
       kind: ethereum/events
@@ -16,9 +16,10 @@ dataSources:
         - Approval
         - ApprovalForAll
         - Deposited
-        - OwnershipTransferred
         - Transfer
         - Withdraw
+        - NewPlayerManager
+        - NewPlayer
       abis:
         - name: RentingProt
           file: RentingProt/abis/RentingProt.json
@@ -29,10 +30,12 @@ dataSources:
           handler: handleApprovalForAll
         - event: Deposited(address,address,uint256,uint256,bytes)
           handler: handleDeposited
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: Withdraw(address,address,uint256,uint256)
           handler: handleWithdraw
+        - event: NewPlayerManager(uint256,address)
+          handler: handleNewPlayerManager
+        - event: NewPlayer(uint256,address)
+          handler: handleNewPlayer
       file: RentingProt/RentingProt.wasm

@@ -35,7 +35,7 @@ async function getImageFromOpenseaAssetData({ collectionAddress, collectionToken
 const myNftAbi = require("../../contracts/abi/myNftAbi.json");
 const rentalProtAbi = require("../../contracts/abi/rentingProtAbi.json");
 
-const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
+const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/rentalprotocol";
 
 //const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
@@ -45,7 +45,7 @@ const tokensQuery = `
     collectionAddress
     collectionTokenId
     tokenURI
-    manager
+    userManager
     owner 
     user
     name 
@@ -70,7 +70,7 @@ export default new Vuex.Store({
       managedNFTs: {},
       playerAccess: {},
     },
-    wrappingProtocol: "0x7228278aA8E50eB3f82559AcCd36C37eF74a8704",
+    wrappingProtocol: "0x268b4fDe69663C1ae1f17b747C5E29F647b3Bdc7",
     loadList: {
       myNFTs: false,
       wrappedNFTs: false,
@@ -137,7 +137,7 @@ export default new Vuex.Store({
         
       } else if (component === "ManagedNFTs") {
         
-        var managed_nfts = tokensQuery.replace("KEY", "manager");
+        var managed_nfts = tokensQuery.replace("KEY", "userManager");
         managed_nfts = managed_nfts.replace("VALUE", address);
         var dataManagedNFTs = await client.query(managed_nfts).toPromise();
         var managedNFTDicts = convertNFTListToMap(dataManagedNFTs.data.nfts);
@@ -275,7 +275,7 @@ export default new Vuex.Store({
       try {
         var rentProtContract = await this.dispatch("getWrapNFTContract");
         await rentProtContract.methods
-          .approve(approveDetails.to, approveDetails.tokenId)
+          .setPlayerManager( approveDetails.tokenId, approveDetails.to)
           .send({
             from: state.walletModule.account,
           });
@@ -291,10 +291,9 @@ export default new Vuex.Store({
         var rentProtContract = await this.dispatch("getWrapNFTContract");
         console.log(state.walletModule.account);
         await rentProtContract.methods
-          .safeTransferFrom(
-            transferNFTDetails.from,
-            transferNFTDetails.to,
-            transferNFTDetails.tokenId
+          .setPlayer(
+            transferNFTDetails.tokenId,
+            transferNFTDetails.to
           )
           .send({
             from: state.walletModule.account,

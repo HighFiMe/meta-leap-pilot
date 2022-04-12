@@ -76,6 +76,40 @@ export class Nft extends Entity {
     }
   }
 
+  get userManager(): Bytes | null {
+    let value = this.get("userManager");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set userManager(value: Bytes | null) {
+    if (value === null) {
+      this.unset("userManager");
+    } else {
+      this.set("userManager", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get userManagerUpdatedAt(): BigInt | null {
+    let value = this.get("userManagerUpdatedAt");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set userManagerUpdatedAt(value: BigInt | null) {
+    if (value === null) {
+      this.unset("userManagerUpdatedAt");
+    } else {
+      this.set("userManagerUpdatedAt", Value.fromBigInt(value as BigInt));
+    }
+  }
+
   get manager(): Bytes | null {
     let value = this.get("manager");
     if (value === null || value.kind == ValueKind.NULL) {

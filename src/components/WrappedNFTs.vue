@@ -122,7 +122,7 @@ export default {
       this.leapTokenId = nft.leapTokenId;
       this.user = nft.user;
       this.owner = nft.owner;
-      this.manager = nft.manager;
+      this.manager = nft.userManager;
 
       this.dialog = true;
     },

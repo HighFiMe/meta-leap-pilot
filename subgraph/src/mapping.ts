@@ -5,9 +5,10 @@ import {
   Approval,
   ApprovalForAll,
   Deposited,
-  OwnershipTransferred,
   Transfer,
   Withdraw,
+  NewPlayerManager,
+  NewPlayer
 } from "../generated/RentingProt/RentingProt";
 import { Nft } from "../generated/schema";
 
@@ -63,6 +64,7 @@ export function handleDeposited(event: Deposited): void {
   nft.collectionTokenId = event.params.oldtokenId.toString();
   nft.collectionAddress = event.params.nftContract;
   nft.tokenURI = contract.tokenURI(event.params.newTokenId);
+  nft.user = event.params.from;
   nft.name = contract.name();
   nft.symbol = contract.symbol();
   nft.createdAt = event.block.timestamp;
@@ -70,15 +72,13 @@ export function handleDeposited(event: Deposited): void {
   nft.save();
 }
 
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
-
 export function handleTransfer(event: Transfer): void {
   let nft = Nft.load(event.params.tokenId.toString());
   if (nft == null) {
     nft = new Nft(event.params.tokenId.toString());
   }
   nft.userUpdatedAt = event.block.timestamp;
-  nft.user = event.params.to;
+  nft.owner = event.params.to;
   nft.save();
 }
 
@@ -87,4 +87,26 @@ export function handleWithdraw(event: Withdraw): void {
   let nft = Nft.load(nft_id);
 
   store.remove("Nft", nft_id);
+}
+
+export function handleNewPlayerManager(event: NewPlayerManager): void {
+  let nft = Nft.load(event.params.tokenId.toString());
+  if (nft == null) {
+    nft = new Nft(event.params.tokenId.toString());
+  }
+
+  nft.userManager = event.params.manager;
+  nft.userManagerUpdatedAt = event.block.timestamp;
+  nft.save();
+}
+
+export function handleNewPlayer(event: NewPlayer): void {
+  let nft = Nft.load(event.params.tokenId.toString());
+  if (nft == null) {
+    nft = new Nft(event.params.tokenId.toString());
+  }
+
+  nft.user = event.params.player;
+  nft.userUpdatedAt = event.block.timestamp;
+  nft.save();
 }

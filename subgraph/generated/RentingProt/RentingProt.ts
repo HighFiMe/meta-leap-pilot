@@ -96,24 +96,46 @@ export class Deposited__Params {
   }
 }
 
-export class OwnershipTransferred extends ethereum.Event {
-  get params(): OwnershipTransferred__Params {
-    return new OwnershipTransferred__Params(this);
+export class NewPlayer extends ethereum.Event {
+  get params(): NewPlayer__Params {
+    return new NewPlayer__Params(this);
   }
 }
 
-export class OwnershipTransferred__Params {
-  _event: OwnershipTransferred;
+export class NewPlayer__Params {
+  _event: NewPlayer;
 
-  constructor(event: OwnershipTransferred) {
+  constructor(event: NewPlayer) {
     this._event = event;
   }
 
-  get previousOwner(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get newOwner(): Address {
+  get player(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class NewPlayerManager extends ethereum.Event {
+  get params(): NewPlayerManager__Params {
+    return new NewPlayerManager__Params(this);
+  }
+}
+
+export class NewPlayerManager__Params {
+  _event: NewPlayerManager;
+
+  constructor(event: NewPlayerManager) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get manager(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 }
@@ -210,6 +232,48 @@ export class RentingProt extends ethereum.SmartContract {
     let result = super.tryCall(
       "getApproved",
       "getApproved(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getPlayer(tokenId: BigInt): Address {
+    let result = super.call("getPlayer", "getPlayer(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+
+    return result[0].toAddress();
+  }
+
+  try_getPlayer(tokenId: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall("getPlayer", "getPlayer(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getPlayerManager(tokenId: BigInt): Address {
+    let result = super.call(
+      "getPlayerManager",
+      "getPlayerManager(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getPlayerManager(tokenId: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getPlayerManager",
+      "getPlayerManager(uint256):(address)",
       [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
     if (result.reverted) {
@@ -338,40 +402,6 @@ export class RentingProt extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  owner(): Address {
-    let result = super.call("owner", "owner():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_owner(): ethereum.CallResult<Address> {
-    let result = super.tryCall("owner", "owner():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  ownerMap(param0: BigInt): Address {
-    let result = super.call("ownerMap", "ownerMap(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-
-    return result[0].toAddress();
-  }
-
-  try_ownerMap(param0: BigInt): ethereum.CallResult<Address> {
-    let result = super.tryCall("ownerMap", "ownerMap(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   ownerOf(tokenId: BigInt): Address {
     let result = super.call("ownerOf", "ownerOf(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
@@ -383,6 +413,48 @@ export class RentingProt extends ethereum.SmartContract {
   try_ownerOf(tokenId: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall("ownerOf", "ownerOf(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  playerManager(param0: BigInt): Address {
+    let result = super.call(
+      "playerManager",
+      "playerManager(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_playerManager(param0: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "playerManager",
+      "playerManager(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  playerMap(param0: BigInt): Address {
+    let result = super.call("playerMap", "playerMap(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+
+    return result[0].toAddress();
+  }
+
+  try_playerMap(param0: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall("playerMap", "playerMap(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -581,32 +653,6 @@ export class OnERC721ReceivedCall__Outputs {
   }
 }
 
-export class RenounceOwnershipCall extends ethereum.Call {
-  get inputs(): RenounceOwnershipCall__Inputs {
-    return new RenounceOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): RenounceOwnershipCall__Outputs {
-    return new RenounceOwnershipCall__Outputs(this);
-  }
-}
-
-export class RenounceOwnershipCall__Inputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall__Outputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
 export class SafeTransferFromCall extends ethereum.Call {
   get inputs(): SafeTransferFromCall__Inputs {
     return new SafeTransferFromCall__Inputs(this);
@@ -721,6 +767,74 @@ export class SetApprovalForAllCall__Outputs {
   }
 }
 
+export class SetPlayerCall extends ethereum.Call {
+  get inputs(): SetPlayerCall__Inputs {
+    return new SetPlayerCall__Inputs(this);
+  }
+
+  get outputs(): SetPlayerCall__Outputs {
+    return new SetPlayerCall__Outputs(this);
+  }
+}
+
+export class SetPlayerCall__Inputs {
+  _call: SetPlayerCall;
+
+  constructor(call: SetPlayerCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get player(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetPlayerCall__Outputs {
+  _call: SetPlayerCall;
+
+  constructor(call: SetPlayerCall) {
+    this._call = call;
+  }
+}
+
+export class SetPlayerManagerCall extends ethereum.Call {
+  get inputs(): SetPlayerManagerCall__Inputs {
+    return new SetPlayerManagerCall__Inputs(this);
+  }
+
+  get outputs(): SetPlayerManagerCall__Outputs {
+    return new SetPlayerManagerCall__Outputs(this);
+  }
+}
+
+export class SetPlayerManagerCall__Inputs {
+  _call: SetPlayerManagerCall;
+
+  constructor(call: SetPlayerManagerCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get manager(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetPlayerManagerCall__Outputs {
+  _call: SetPlayerManagerCall;
+
+  constructor(call: SetPlayerManagerCall) {
+    this._call = call;
+  }
+}
+
 export class TransferFromCall extends ethereum.Call {
   get inputs(): TransferFromCall__Inputs {
     return new TransferFromCall__Inputs(this);
@@ -755,36 +869,6 @@ export class TransferFromCall__Outputs {
   _call: TransferFromCall;
 
   constructor(call: TransferFromCall) {
-    this._call = call;
-  }
-}
-
-export class TransferOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOwnershipCall__Inputs {
-    return new TransferOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): TransferOwnershipCall__Outputs {
-    return new TransferOwnershipCall__Outputs(this);
-  }
-}
-
-export class TransferOwnershipCall__Inputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-
-  get newOwner(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class TransferOwnershipCall__Outputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
     this._call = call;
   }
 }
