@@ -64,6 +64,7 @@ export default  {
         this.dispatch("refreshData");
         commit("setAccount", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
+        console.log(chainId);
         commit("setChain", chainId);
         // console.log(address);
       },

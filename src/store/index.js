@@ -124,12 +124,16 @@ export default new Vuex.Store({
     async getData({ state, commit }, { component }) {
       var address = state.walletModule.account;
       if (address == "" || address == null) return;
+      if(parseInt(state.walletModule.chainId) != 4){
+        alert("Switch to Rinkeby network");
+      }
 
       if (component === "WrappedNFTs") {
         
         var wrapped_nfts = tokensQuery.replace("KEY", "owner");
         wrapped_nfts = wrapped_nfts.replace("VALUE", address);
         var dataWrappedNFTs = await client.query(wrapped_nfts).toPromise();
+        console.log(dataWrappedNFTs)
         var wrappedNFTDict = convertNFTListToMap(dataWrappedNFTs.data.nfts);
         await this.dispatch("commitNFTData",
           {incomingDict:wrappedNFTDict, currentDict:state.NFTData.wrappedNFTs, type: 'wrappedNFTs'});

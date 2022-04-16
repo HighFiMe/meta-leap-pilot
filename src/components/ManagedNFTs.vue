@@ -32,7 +32,12 @@
               </v-row>
             </div>
           </template>
-          <v-card>
+          <v-card class="plain">
+            <v-card-actions>
+              <v-row justify='end'>
+                 <v-btn text @click="dialog = false" ><v-icon class="fa fa-remove"></v-icon></v-btn>
+              </v-row>
+            </v-card-actions>
             <v-card-text>
               <v-container>
                 <v-row>
@@ -58,8 +63,6 @@
             <v-card-actions>
               <v-btn color="primary" text @click="submit('transfer', nft.leapTokenId)"> Change player </v-btn>
               <v-spacer></v-spacer>
-
-              <v-btn color="primary" text @click="dialog = false"> Close </v-btn>
             </v-card-actions>
           </v-card>
          </v-dialog>

@@ -12,7 +12,7 @@
         <v-row v-else>
          <v-col
           v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri, nft.contract_type))"
-          :key="nft.token_id"
+          :key="nft.synced_at"
           cols="4"
           height="330"
           align="center"
@@ -51,6 +51,7 @@
 
 import loadingScreen from './loadingScreen.vue';
 
+
 export default {
   name: "MyCollection",
 
@@ -64,7 +65,7 @@ export default {
   computed: {
     getNFTList() {
       if (this.$store.state.NFTData.myNFTs == null || this.$store.state.NFTData.myNFTs == [] || this.$store.state.NFTData.myNFTs.length == 0) return null;
-      
+      console.log(this.$store.state.NFTData);
       return this.$store.state.NFTData.myNFTs;
     },
     getConnectedAccount() {
@@ -115,6 +116,9 @@ export default {
   },
     async mounted() {
       await this.$store.dispatch("getNFTsInAddress");
-    }
+    },/*
+    beforeCreate() {
+      this.$options.components.MyCollection = require('./MyCollection.vue').default
+    }*/
   };
 </script>
