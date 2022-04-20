@@ -81,6 +81,16 @@ export default {
         this.$vToastify.warning("Connect your wallet please");
         return;
       }
+     // console.log(this.$store.state.NFTData.myNFTs[6].token_id);
+      //console.log(tokenId);
+      //console.log(this.$store.state.NFTData.myNFTs);
+      for(var i=0;i<this.$store.state.NFTData.myNFTs.length;i++){
+        if(tokenId == this.$store.state.NFTData.myNFTs[i].token_id && tokenAddress == this.$store.state.NFTData.myNFTs[i].token_address){
+          console.log(this.$store.state.NFTData.myNFTs[i]);
+          this.$store.state.NFTData.myNFTs[i] == null;
+          //vue.set
+        }
+      }
       await this.$store.dispatch("wrapNFT", {
         nftAddress: tokenAddress,
         from: account,
@@ -102,7 +112,22 @@ export default {
         return true;
       }
       return false;
-    },
+    },/*
+    getNFTName(nft){
+       console.log(nft);
+      if(nft.metadata!=null){
+        console.log(JSON.parse(nft.metadata).name);
+        if(JSON.parse(nft.metadata).name!=null){
+          return JSON.parse(nft.metadata).name;
+        }
+        else{
+          console.log(JSON.parse(nft.metadata).value);
+          return JSON.parse(nft.metadata).value;
+        }
+      }
+      return 'name';
+      //return JSON.parse(metadata).name;
+    },*/
     getOpenseaUrl(metadata){
       if(metadata != null && JSON.parse(metadata).image.startsWith("https")){
         //console.log(metadata.image).startsWith("https");

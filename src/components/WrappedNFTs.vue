@@ -23,7 +23,7 @@
               <v-row>
                 <v-card class="secondary">
                   <v-img :src="nft.image" height="250" width="300" />
-                  <v-card-title class="plain--text">NAME</v-card-title>
+                  <v-card-title class="plain--text">{{nft.name}}</v-card-title>
                   <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
                 </v-card>
               </v-row>
@@ -33,15 +33,15 @@
               </v-row>
             </div>
           </template>
-          <v-card class="plain">
+          <v-card class="secondary">
             <v-card-actions>
               <v-row justify='end'>
                  <v-btn text @click="dialog = false" ><v-icon class="fa fa-remove"></v-icon></v-btn>
               </v-row>
             </v-card-actions>
-            <v-card-text>
-              <v-container>
-                <v-row>
+            <v-card-text class="plain--text">
+              <v-container >
+                <v-row >
                   <v-col>Owner: {{ owner }} </v-col>
                 </v-row>
                 <v-row>
@@ -56,7 +56,10 @@
                   <v-col>Player: {{ user || "No player assigned" }}</v-col>
                 </v-row>
                 <v-row>
-                  <v-text-field v-model="address" label="Enter Address"></v-text-field>
+                  <v-col>Player Split: </v-col>
+                </v-row>
+                <v-row>
+                  <v-text-field v-model="address" label="Enter Address" class="plain--text"></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -65,6 +68,7 @@
             <v-card-actions>
               <v-btn color="accent" text @click="submit('approve', nft.leapTokenId)" > Change Manager </v-btn>
               <v-btn color="accent" text @click="submit('transfer', nft.leapTokenId)"> Change Player </v-btn>
+              <v-btn color="accent" text > Player Split </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -156,7 +160,6 @@ export default {
         this.$vToastify.warning("Connect your wallet please");
         return;
       }
-
       this.$store.dispatch("unwrapNFT", {
         collectionAddress,
         collectionTokenId

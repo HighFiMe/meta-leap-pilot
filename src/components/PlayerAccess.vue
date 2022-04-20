@@ -13,7 +13,7 @@
          <v-col v-for="(nft, key) in getNFTs" :key="key" cols="4">
            <v-card class="secondary">
             <v-img :src="nft.image" />
-            <v-card-title class="plain--text">NAME</v-card-title>
+            <v-card-title class="plain--text">{{nft.name}}</v-card-title>
             <v-card-subtitle class="plain--text">Token Id: {{ nft.leapTokenId }}</v-card-subtitle>
           </v-card>
         </v-col>
