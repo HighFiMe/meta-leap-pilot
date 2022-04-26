@@ -35,7 +35,7 @@ async function getImageFromOpenseaAssetData({ collectionAddress, collectionToken
 const myNftAbi = require("../../contracts/abi/myNftAbi.json");
 const rentalProtAbi = require("../../contracts/abi/rentingProtAbi.json");
 
-const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/rentalprotocol";
+const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
 
 //const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
