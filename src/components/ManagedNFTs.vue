@@ -93,7 +93,15 @@ export default {
       var managedNFTs = this.$store.state.NFTData.managedNFTs;
       if (managedNFTs == null || managedNFTs == [] || managedNFTs == 0)
         return null;
-      return Object.values(managedNFTs).filter((nft) => this.showNFT(nft));
+      if(!this.search){
+        return Object.values(managedNFTs).filter((nft) => this.showNFT(nft));
+      } else {
+        return Object.values(managedNFTs).filter(nft => 
+          nft.name.toLowerCase().includes(this.search.toLowerCase()) ||
+          nft.token_address.toLowerCase().includes(this.search.toLowerCase())
+        )
+      }
+      // return Object.values(managedNFTs).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

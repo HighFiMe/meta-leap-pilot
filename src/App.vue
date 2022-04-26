@@ -13,7 +13,10 @@
 
       <v-spacer></v-spacer>
 
-      <div class="d-flex align-center" style="padding-right: 24px">
+      <v-btn depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
+              $store.state.walletModule.account
+            }}</v-btn>
+      <!-- <div class="d-flex align-center" style="padding-right: 24px">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn 
@@ -36,10 +39,41 @@
             </v-list-item>
           </v-list>
         </v-menu>
-      </div>
+      </div> -->
     </v-app-bar>
 
     <v-main class="primary">
+      <template>
+              <v-dialog v-model="sheet" persistent width="400px">
+                <!-- <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="green" dark v-bind="attrs" v-on="on">Open Persistent</v-btn>
+               </template> -->
+                <v-card class="text-center" height="200px">
+                  <br>
+                  <br>
+        <v-menu offset-y >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              depressed
+              x-large
+              v-bind="attrs"
+              v-on="on"
+              color="accent"
+              style="text-transform: unset !important; background: lightgrey; font-size: 1.2em"
+            >
+              connect wallet
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in items" :key="index" :disabled="item.disabled" link @click="handleClick(index)">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+                  <div class="py-3">Please connect your wallet to continue</div>
+                </v-card>
+              </v-dialog>
+    </template>
       <div style="padding-top: 10px; color: primary" >
         <v-btn-toggle v-model="toggle_none" class="primary" >
           <v-btn class="plain--text"
@@ -143,12 +177,13 @@ export default {
   },
 
   data: () => ({
+    // sheet: true,
     toggle_none: 0,
     
     items: [
       {
         title: "Metamask Login",
-        diabled: false,
+        diabled: true,
         click() {
           this.$store.dispatch("connectToMetamask").walletModule;
           // console.log(window.ethereum.request({ method: 'eth_accounts' }))
@@ -156,7 +191,7 @@ export default {
       },
       {
         title: "walletconnect",
-        disabled: true,
+        disabled: false,
         click() {
           this.$store.dispatch("connectToWalletconnect").walletModule;
           // console.log(window.ethereum.request({ method: 'eth_accounts' }))
@@ -165,6 +200,13 @@ export default {
     ],
   }),
 
+  computed: {
+    sheet: {
+      get () {
+        return !this.$store.state.walletModule.account;
+      }
+    }
+  },
   methods: {
     handleClick(index) {
       this.items[index].click.call(this);
@@ -184,9 +226,9 @@ export default {
   async mounted() {
     let a = 1;
     let b = 1;
-    this.$store.dispatch("connectToMetamask").then(() => {
+    // this.$store.dispatch("connectToMetamask").then(() => {
       this.$store.dispatch("refreshData");
-    });
+    // });
     while (a == b) {
       await sleep(10000);
       await this.$store.dispatch("refreshData");

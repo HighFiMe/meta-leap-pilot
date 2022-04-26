@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <br>
+    <input type="text" v-model="search" placeholder="Filter" /> <br> <br>
     <v-main v-if="getConnectedAccount">
       <v-row v-if="this.$store.state.loadList.playerAccess == true && getNFTs === null" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
@@ -32,13 +33,23 @@ export default {
   components:{
     loadingScreen,
   },
-  data: () => ({}),
+  data: () => ({
+    search: "",
+  }),
   computed: {
     getNFTs() {
       var playerAccess = this.$store.state.NFTData.playerAccess;
       if (playerAccess == null || playerAccess == [] || playerAccess == 0)
         return null;
-      return Object.values(playerAccess).filter((nft) => this.showNFT(nft));
+      if(!this.search){
+        return Object.values(playerAccess).filter((nft) => this.showNFT(nft));
+      } else {
+        return Object.values(playerAccess).filter(nft => 
+          nft.name.toLowerCase().includes(this.search.toLowerCase()) ||
+          nft.token_address.toLowerCase().includes(this.search.toLowerCase())
+        )
+      }
+      // return Object.values(playerAccess).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

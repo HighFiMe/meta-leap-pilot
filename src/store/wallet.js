@@ -11,21 +11,25 @@ export default  {
     mutations: { 
       setWeb3(state, web3) {
         state.web3 = web3;
+        console.log(state.web3)
     },
       setProvider(state, provider) {
         state.provider = provider;
+        console.log(state.provider)
     },
       setChain(state, chainId) {
         state.chainId = chainId;
+        console.log(state.chainId)
     },
       setAccount(state, account) {
         state.account = account;
+        console.log(state.account)
         state.web3.eth.defaultAccount = account;
     }, },
 
     actions: { 
       async listeners ({ commit, state }) {
-        console.log(state.provider);
+        // console.log(state.provider);
         state.provider.on('accountsChanged', (accounts) => {
           if(accounts && accounts[0])
           {
@@ -71,10 +75,11 @@ export default  {
       async connectToWalletconnect({ commit, state }) {
       // async connectToWalletconnect({ commit }) {
         const provider = new WalletConnectProvider({
-          infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
+          infuraId: "85db4049c00b4783a425412807ff92e9",
         });
         // dispatch("listeners");
         commit("setProvider", provider);
+        console.log(window.ethereum == provider);
         await state.provider.enable();
         const web3 = new Web3(state.provider);
         commit("setWeb3", web3);

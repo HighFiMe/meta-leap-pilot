@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <br>
+    <input type="text" v-model="search" placeholder="Filter" /> <br> <br>
     <v-main v-if="getConnectedAccount">
       <v-row v-if="this.$store.state.loadList.wrappedNFTs == true && getNFTs == null || getNFTs.length == 0" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
@@ -102,13 +103,23 @@ export default {
     owner: "",
     manager: "",
     user: "",
+    search: "",
   }),
   computed: {
     getNFTs() {
       var wrappedNFTs = this.$store.state.NFTData.wrappedNFTs;
       if (wrappedNFTs == null || wrappedNFTs == [] || wrappedNFTs == 0)
         return null;
-      return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
+      if(!this.search){
+        return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
+      } else {
+        let nfts = Object.values(wrappedNFTs).filter(nft => this.showNFT(nft));
+        return nfts.filter(nft => 
+          nft.leapTokenId.toLowerCase().includes(this.search.toLowerCase()) || 
+          nft.collectionAddress.toLowerCase().includes(this.search.toLowerCase())
+        )
+      }
+      // return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);

@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <br>
+    <input type="text" v-model="search" placeholder="Filter" /> <br> <br>
     <v-main v-if="getConnectedAccount">
       <v-row v-if="this.$store.state.loadList.myNFTs == true && getNFTList === null" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
@@ -61,12 +62,27 @@ export default {
 
   data: () => ({
     openseaStartUrl: "https://ipfs.io/ipfs/",
+    search: "",
   }),
   computed: {
+    // filteredProducts() {
+    //   return this.products.filter(p => {
+    //     return p.name.toLowerCase().indexOf(this.search.toLowerCase()) != -1;
+    //   });
+    // },
+
     getNFTList() {
+      console.log(this.search);
+      console.log(this.$store.state.NFTData.myNFTs)
       if (this.$store.state.NFTData.myNFTs == null || this.$store.state.NFTData.myNFTs == [] || this.$store.state.NFTData.myNFTs.length == 0) return null;
-      console.log(this.$store.state.NFTData);
-      return this.$store.state.NFTData.myNFTs;
+      if(!this.search){
+        return this.$store.state.NFTData.myNFTs;
+      } else {
+        return this.$store.state.NFTData.myNFTs.filter(nft => 
+          nft.name.toLowerCase().includes(this.search.toLowerCase()) ||
+          nft.token_address.toLowerCase().includes(this.search.toLowerCase())
+        )
+      }
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);
