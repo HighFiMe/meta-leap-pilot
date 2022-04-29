@@ -59,12 +59,22 @@ export default  {
 
       async connectToMetamask({ commit, state, dispatch }) {
         commit("setProvider", window.ethereum);
+        var accounts = "";
         console.log(state.provider);
-        const accounts = await state.provider.send('eth_requestAccounts');
+        if (window.ethereum.isConnected()) {
+          const currAccounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
+          // console.log(accounts)
+          accounts = currAccounts;
+        } else {
+          accounts = await state.provider.send('eth_requestAccounts');
+        }
+        
         window.web3 = new Web3(state.provider);
         commit("setWeb3", window.web3);
         dispatch("listeners");
-        const address = accounts.result[0];
+        const address = accounts[0];
         this.dispatch("refreshData");
         commit("setAccount", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
