@@ -89,8 +89,8 @@ export default new Vuex.Store({
   },
   actions: {
     async getUsageNFTs({ state, commit }) {
-      var coldWallet = state.coldWallet;
-      console.log('hot wallet', coldWallet);
+      var coldWallet = state.hotWallet;
+      console.log('cold wallet', coldWallet);
       if (coldWallet == "" || coldWallet == null || coldWallet == "0x0000000000000000000000000000000000000000") return;
       console.log('here here heeer')
       const options = { chain: "rinkeby", address: coldWallet };

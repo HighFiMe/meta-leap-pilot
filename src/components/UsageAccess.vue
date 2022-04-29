@@ -67,7 +67,7 @@ export default {
     getNFTs() {
       var usageAccess = this.$store.state.NFTData.usageAccess;
       console.log(this.$store.state.loadList.usageAccess);
-      if (usageAccess == null || usageAccess == [] || usageAccess.length == 0)
+      if (usageAccess == null || usageAccess == [] || usageAccess.length == 0|| this.$store.state.walletModule.account == this.$store.state.coldWallet)
         return null;
       return Object.values(usageAccess);
 
