@@ -78,22 +78,15 @@ export default  {
         console.log(chainId);
         commit("setChain", chainId);
       },
+
       async connectToMetamask({ commit, state, dispatch }) {
         commit("setProvider", window.ethereum);
-        var accounts = "";
-        const currAccounts = await window.ethereum.request({
-            method: "eth_accounts",
-          });
-        if (currAccounts.length != 0) {
-          accounts = currAccounts;
-        } else {
-          accounts = await state.provider.send('eth_requestAccounts');
-        }
-        
+        var accounts = await state.provider.send('eth_requestAccounts');
+
         window.web3 = new Web3(state.provider);
         commit("setWeb3", window.web3);
         dispatch("listeners");
-        const address = accounts[0];
+        const address = accounts.result[0];
         this.dispatch("refreshData");
         commit("setAccount", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
@@ -101,6 +94,7 @@ export default  {
         commit("setChain", chainId);
         // console.log(address);
       },
+
       async connectToWalletconnect({ commit, state }) {
       // async connectToWalletconnect({ commit }) {
         const provider = new WalletConnectProvider({

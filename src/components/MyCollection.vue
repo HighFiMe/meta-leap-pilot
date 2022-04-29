@@ -20,6 +20,9 @@
           </v-col>
           <v-col>
             <v-btn
+              class="plain--text"
+              href=""
+              color="accent"
               style="
                 text-transform: unset !important;
                 margin-left: 20px;
