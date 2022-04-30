@@ -13,6 +13,7 @@ import {
 Vue.use(Vuex);
 
 const hotWalletAbi = require("../../contracts/abi/hotWallet.json");
+const nftContractAbi = require("../../contracts/abi/myNftAbi.json");
 
 const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/hot-wallet";
 
@@ -42,6 +43,7 @@ export default new Vuex.Store({
       usageAccess: {},
     },
     hotWalletProtocol: "0x2efAaeFa209825Bd98eE19BCD404914427F74bCf",
+    nftCollection: "0x5bB502ed31277C199919c2c3D66dce5E7A193BDd",
     hotWallet: "",
     coldWallet: "",
     loadList: {
@@ -181,6 +183,21 @@ export default new Vuex.Store({
       }
     },
 
+    async getNFTContract({ state }) {
+      try {
+        var nftChecksum = Web3.utils.toChecksumAddress(state.nftCollection);
+        var nftContract = new state.walletModule.web3.eth.Contract(
+          nftContractAbi,
+          nftChecksum
+        );
+        return nftContract;
+      } catch (error) {
+        console.log(error);
+        console.log("connected contract not found");
+        return null;
+      }
+    },
+
     async setDefaultHotWallet({ state }, hotWalletAddress) {
       try {
         var hotWalletContract = await this.dispatch("getHotWalletContract");
@@ -199,5 +216,21 @@ export default new Vuex.Store({
         return null;
       }
     },
+
+    async mintNFT(context, account) {
+      try{
+        var nftContract = await this.dispatch("getNFTContract");
+        await nftContract.methods.mintNFT(account, 'https://lh3.googleusercontent.com/NfNeN2am-K5u14t-iFiStppxpLlRT-RPer4tdo2rxuXnLYolDma0HV0EAkx8eZjEIqoUgGC9vBmZRcmbhnCmYlzmXbWgkyL4C9rQjg=w286')
+        .send({
+          from: account
+        });
+
+      } catch (err) {
+        console.log("error");
+        console.log(err);
+        return null;
+      }
+      
+    }
   },
 });

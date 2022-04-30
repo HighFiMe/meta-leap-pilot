@@ -21,7 +21,17 @@
         </div>
 
         <v-spacer></v-spacer>
-
+        <v-btn
+          color="accent"
+          style="
+            text-transform: unset !important;
+            background: lightgrey;
+            font-size: 1.2em;
+            margin-right: 20px;
+          "
+          @click="mintNFT()"
+          >Mint NFT</v-btn
+        >
         <v-btn
           depressed
           style="
@@ -177,6 +187,15 @@ export default {
     handleClick(index) {
       this.items[index].click.call(this);
     },
+    mintNFT() {
+      var account = this.$store.state.walletModule.account;
+      if (account == null || account == "") {
+        this.$vToastify.warning("Please connect your wallet, we will mint the NFT to the wallet!");
+        return;
+      }
+      this.$store.dispatch("mintNFT", account).then(() => this.$vToastify.success("Transaction completed, please wait a minute for the NFT to arrive."));
+      this.$vToastify.success("Transaction placed, please wait for it to complete.");
+    }
   },
 
   
