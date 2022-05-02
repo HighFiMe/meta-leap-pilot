@@ -92,15 +92,6 @@
                   >
                   <v-card-subtitle class="plain--text"></v-card-subtitle>
                 </v-card>
-                <v-btn
-                  color="accent"
-                  v-on:click="
-                    wrapNFT(nft.owner_of, nft.token_address, nft.token_id)
-                  "
-                  style="text-align: center"
-                >
-                  Wrap NFT
-                </v-btn>
               </div>
             </template>
           </v-col>

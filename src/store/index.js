@@ -87,7 +87,7 @@ export default new Vuex.Store({
     },
     setColdWallet(state, coldWallet) {
       state.coldWallet = coldWallet;
-    }
+    },
   },
   actions: {
     async getUsageNFTs({ state, commit }) {
@@ -230,7 +230,6 @@ export default new Vuex.Store({
         console.log(err);
         return null;
       }
-      
-    }
+    },
   },
 });

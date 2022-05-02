@@ -6,7 +6,9 @@ export default  {
       web3: null,
       provider: null,
       account: null,
-      chainId: null}),
+      chainId: null,
+      ensName: null,
+      }),
 
     mutations: { 
       setWeb3(state, web3) {
@@ -25,7 +27,11 @@ export default  {
         state.account = account;
         console.log(state.account)
         state.web3.eth.defaultAccount = account;
-    }, },
+    },
+    setENSname(state, ensName) {
+      state.ensName = ensName;
+    } 
+  },
 
     actions: { 
       async listeners ({ commit, state }) {
@@ -74,6 +80,7 @@ export default  {
         const address = accounts[0];
         this.dispatch("refreshData");
         commit("setAccount", address);
+        // this.dispatch("getENSName", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
         console.log(chainId);
         commit("setChain", chainId);
@@ -87,8 +94,10 @@ export default  {
         commit("setWeb3", window.web3);
         dispatch("listeners");
         const address = accounts.result[0];
-        this.dispatch("refreshData");
+
         commit("setAccount", address);
+        this.dispatch("refreshData");
+        // this.dispatch("getENSName", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
         console.log(chainId);
         commit("setChain", chainId);
@@ -111,6 +120,18 @@ export default  {
         commit("setAccount", address);
         // console.log(address);
       }, 
+
+
+      async getENSName({state, commit}, account) {
+        console.log('pinging ens')
+        try {
+          var ensName = state.web3.eth.ens.reverseResolve(account);
+          console.log('ensName: ',ensName);
+          commit('setENSname', ensName);
+        } catch (err) {
+          console.log(err);
+        }
+      },
     },
     
     getters: {  }
