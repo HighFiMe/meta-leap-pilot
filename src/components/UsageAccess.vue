@@ -66,21 +66,18 @@ export default {
   computed: {
     getNFTs() {
       var usageAccess = this.$store.state.NFTData.usageAccess;
-      console.log(this.$store.state.loadList.usageAccess);
       if (usageAccess == null || usageAccess == [] || usageAccess.length == 0|| this.$store.state.walletModule.account == this.$store.state.coldWallet)
         return null;
       return Object.values(usageAccess);
 
     },
     getConnectedAccount() {
-      console.log(this.$store.state.walletModule.account);
       return this.$store.state.walletModule.account;
     },
   },
   methods: {
     isOpenseaURL(metadata) {
       if (metadata != null && JSON.parse(metadata) != null) {
-        //console.log(JSON.parse(metadata).image);
         return true;
       }
       return false;
@@ -91,7 +88,6 @@ export default {
       }
 
       var url = this.openseaStartUrl + JSON.parse(metadata).image.slice(7);
-      //console.log(url);
       return url;
     },
   },

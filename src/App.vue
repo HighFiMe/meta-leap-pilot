@@ -203,7 +203,6 @@ export default {
     let a = 1;
     let b = 1;
     this.$store.dispatch("connectToMetamaskIfConnected")
-    this.$store.dispatch("refreshData");
     
     while (a == b) {
       await sleep(10000);

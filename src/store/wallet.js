@@ -57,10 +57,8 @@ export default  {
 
 
         state.provider.on('chainChanged', (chainId) => {
-          // console.log(chainId);
           commit("setChain", chainId);
         });
-        // console.log("hi"); 
       },
       async connectToMetamaskIfConnected({commit, state, dispatch}) {
         commit("setProvider", window.ethereum);
@@ -82,7 +80,6 @@ export default  {
         commit("setAccount", address);
         // this.dispatch("getENSName", address);
         const chainId = await state.provider.request({ method: 'eth_chainId' });
-        console.log(chainId);
         commit("setChain", chainId);
       },
 
@@ -97,11 +94,10 @@ export default  {
 
         commit("setAccount", address);
         this.dispatch("refreshData");
-        // this.dispatch("getENSName", address);
+
         const chainId = await state.provider.request({ method: 'eth_chainId' });
         console.log(chainId);
         commit("setChain", chainId);
-        // console.log(address);
       },
 
       async connectToWalletconnect({ commit, state }) {
@@ -109,7 +105,7 @@ export default  {
         const provider = new WalletConnectProvider({
           infuraId: "85db4049c00b4783a425412807ff92e9",
         });
-        // dispatch("listeners");
+
         commit("setProvider", provider);
         console.log(window.ethereum == provider);
         await state.provider.enable();
@@ -118,7 +114,6 @@ export default  {
         const accounts = await state.web3.eth.getAccounts();
         const address = accounts[0];
         commit("setAccount", address);
-        // console.log(address);
       }, 
 
 

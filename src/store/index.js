@@ -12,6 +12,8 @@ import {
 
 Vue.use(Vuex);
 
+let sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const hotWalletAbi = require("../../contracts/abi/hotWallet.json");
 const nftContractAbi = require("../../contracts/abi/myNftAbi.json");
 
@@ -20,7 +22,7 @@ const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/hot-wallet";
 //const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
   query {
-  defaultWallets(hotWallet: "ADDRESS") {
+  defaultWallets(where: {WALLET_TYPE: "ADDRESS"}) {
     id
     coldWallet
     hotWallet
@@ -45,7 +47,7 @@ export default new Vuex.Store({
     hotWalletProtocol: "0x2efAaeFa209825Bd98eE19BCD404914427F74bCf",
     nftCollection: "0x5bB502ed31277C199919c2c3D66dce5E7A193BDd",
     hotWallet: "",
-    coldWallet: "",
+    coldWalletList: [],
     loadList: {
       myNFTs: false,
       usageAccess: false,
@@ -85,52 +87,28 @@ export default new Vuex.Store({
     setHotWallet(state, hotWallet) {
       state.hotWallet = hotWallet;
     },
-    setColdWallet(state, coldWallet) {
-      state.coldWallet = coldWallet;
+    setColdWalletList(state, coldWalletList) {
+      state.coldWalletList = coldWalletList;
     },
   },
   actions: {
     async getUsageNFTs({ state, commit }) {
-      var coldWallet = state.hotWallet;
-      console.log('cold wallet', coldWallet);
-      if (coldWallet == "" || coldWallet == null || coldWallet == "0x0000000000000000000000000000000000000000") return;
-      console.log('here here heeer')
-      const options = { chain: "rinkeby", address: coldWallet };
-      var nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
-      console.log(nftsInAddress)
-      nftsInAddress["result"].map(x => {
-        commit("addNftToNftData", {nft:x, type: 'usageAccess', key: x['token_hash']});
-      })
+      var coldWalletList = state.coldWalletList;
+      var coldWallet = "";
+      for (var walletIndex = 0; walletIndex <= coldWalletList.length; walletIndex = walletIndex + 1){
+        coldWallet = state.coldWalletList[walletIndex]['coldWallet'];
+
+        if (coldWallet == "" || coldWallet == null || coldWallet == "0x0000000000000000000000000000000000000000") continue;
       
-      commit("setLoadingStates", {loadingType: 'usageAccess', setLoading: true});
-      
+        const options = { chain: "rinkeby", address: coldWallet };
+        var nftsInAddress = await Moralis.Web3API.account.getNFTs(options);
+        nftsInAddress["result"].map(x => {
+          commit("addNftToNftData", {nft:x, type: 'usageAccess', key: x['token_hash']});
+        })
+        
+        commit("setLoadingStates", {loadingType: 'usageAccess', setLoading: true});
+      }
     },
-
-
-    // async commitNFTData({commit}, {incomingDict, currentDict, type}) {
-    //   var operations = getNFTDictOperations(incomingDict, currentDict);
-    //   let key = 0;
-    //   for (let index in operations.insert) {
-    //     key = operations.insert[index];
-    //     if (!(incomingDict[key]['tokenURI'].includes('googleusercontent'))) {
-    //       console.log('requests made');
-    //       incomingDict[key]['image'] = await getImageFromOpenseaAssetData(
-    //         {
-    //           collectionAddress: incomingDict[key]['collectionAddress'], 
-    //           collectionTokenId: incomingDict[key]['collectionTokenId'], 
-    //           tokenUri: incomingDict[key]['tokenUri']
-    //         });
-    //        await sleep(1000);
-    //     }else{
-    //       incomingDict[key]['image'] = incomingDict[key]['tokenURI'];
-    //     }
-    //     commit("addNftToNftData", {nft:incomingDict[key], type, key})
-    //   }
-    //   for (let index in operations.delete) {
-    //     key = operations.delete[index];
-    //     commit("removeNftFromNftData", {type, key})
-    //   }
-    // },
 
     async getNFTsInAddress({ commit, state }) {
       const address = state.walletModule.account;
@@ -144,23 +122,34 @@ export default new Vuex.Store({
     },
 
     async refreshData() {
-      this.dispatch("getNFTsInAddress");
-      await this.dispatch("loadDefaultAddress");
+      await sleep(10000);
+      await this.dispatch("getNFTsInAddress");
+      await this.dispatch("loadMappingInfo");
+      await sleep(1000);
       await this.dispatch("getUsageNFTs");
       
     },
 
-    async loadDefaultAddress({state, commit}) {
+    async loadMappingInfo({state, commit}) {
       const address = state.walletModule.account;
 
       if (address == "" || address == null) return;
       try {
-        var player_access = tokensQuery.replace("ADDRESS", address);
-        var dataUsageAccess = await client.query(player_access).toPromise();
-        var walletMap = dataUsageAccess.data.defaultWallets[0];
+        var coldWalletQuery = tokensQuery.replace("ADDRESS", address);
+        coldWalletQuery = coldWalletQuery.replace("WALLET_TYPE", "hotWallet");
+        var coldWalletResponse = await client.query(coldWalletQuery).toPromise();
+        var walletList = coldWalletResponse.data.defaultWallets;
 
-        commit("setHotWallet", walletMap['hotWallet']);
-        commit("setColdWallet", walletMap['coldWallet'])
+        commit("setColdWalletList", walletList)
+
+        var hotWalletQuery = tokensQuery.replace("ADDRESS", address);
+        hotWalletQuery = hotWalletQuery.replace("WALLET_TYPE", "coldWallet");
+        
+        var hotWalletResponse = await client.query(hotWalletQuery).toPromise();
+        var hotWallet = hotWalletResponse.data.defaultWallets[0]['hotWallet'];
+
+        commit("setHotWallet", hotWallet)
+        
       } catch (error) {
         console.log("error");
         console.log(error);

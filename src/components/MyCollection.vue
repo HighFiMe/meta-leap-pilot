@@ -131,11 +131,6 @@ export default {
     hotWalletAddress: "",
   }),
   computed: {
-    // filteredProducts() {
-    //   return this.products.filter(p => {
-    //     return p.name.toLowerCase().indexOf(this.search.toLowerCase()) != -1;
-    //   });
-    // },
 
     getNFTList() {
       if (
@@ -147,7 +142,6 @@ export default {
       return this.$store.state.NFTData.myNFTs;
     },
     getConnectedAccount() {
-      console.log(this.$store.state.walletModule.account);
       return this.$store.state.walletModule.account;
     },
   },
@@ -158,15 +152,12 @@ export default {
         this.$vToastify.warning("Connect your wallet please");
         return;
       }
-      // console.log(this.$store.state.NFTData.myNFTs[6].token_id);
-      //console.log(tokenId);
-      //console.log(this.$store.state.NFTData.myNFTs);
+
       for (var i = 0; i < this.$store.state.NFTData.myNFTs.length; i++) {
         if (
           tokenId == this.$store.state.NFTData.myNFTs[i].token_id &&
           tokenAddress == this.$store.state.NFTData.myNFTs[i].token_address
         ) {
-          console.log(this.$store.state.NFTData.myNFTs[i]);
           this.$store.state.NFTData.myNFTs[i] == null;
           //vue.set
         }
@@ -194,7 +185,6 @@ export default {
     },
     isOpenseaURL(metadata) {
       if (metadata != null && JSON.parse(metadata) != null) {
-        //console.log(JSON.parse(metadata).image);
         return true;
       }
       return false;
@@ -205,12 +195,9 @@ export default {
       }
 
       var url = this.openseaStartUrl + JSON.parse(metadata).image.slice(7);
-      //console.log(url);
       return url;
     },
   },
-  async mounted() {
-    await this.$store.dispatch("getNFTsInAddress");
-  } 
+  
 };
 </script>
