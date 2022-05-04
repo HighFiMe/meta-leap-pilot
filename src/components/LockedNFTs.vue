@@ -3,11 +3,11 @@
     <br>
     <input type="text" v-model="search" placeholder="Filter" /> <br> <br>
     <v-main v-if="getConnectedAccount">
-      <v-row v-if="this.$store.state.loadList.wrappedNFTs == true && getNFTs == null || getNFTs.length == 0" style="padding-top: 200px;" justify="center" class="plain--text">
+      <v-row v-if="this.$store.state.loadList.lockedNFTs == true && getNFTs == null || getNFTs.length == 0" style="padding-top: 200px;" justify="center" class="plain--text">
         No NFTs present in the collection
       </v-row>
       <v-row v-else>
-        <v-row v-if="this.$store.state.loadList.wrappedNFTs == false ">
+        <v-row v-if="this.$store.state.loadList.lockedNFTs == false ">
           <loadingScreen></loadingScreen>
         </v-row>
         <v-row v-else>
@@ -43,22 +43,22 @@
             <v-card-text class="plain--text">
               <v-container >
                 <v-row >
-                  <v-col>Owner: {{ owner }} </v-col>
+                  <v-col>owner: {{ owner }} </v-col>
                 </v-row>
                 <v-row>
                   <v-col
-                    >Manager:
+                    >approved:
                     {{
                       manager == "0x0000000000000000000000000000000000000000" ? "No Manager assigned" : manager
                     }}</v-col
                   >
                 </v-row>
                 <v-row>
-                  <v-col>Player: {{ user || "No player assigned" }}</v-col>
+                  <v-col>user: {{ user || "No player assigned" }}</v-col>
                 </v-row>
-                <v-row>
+                <!-- <v-row>
                   <v-col>Player Split: </v-col>
-                </v-row>
+                </v-row> -->
                 <v-row>
                   <v-text-field v-model="address" label="Enter Address" class="plain--text"></v-text-field>
                 </v-row>
@@ -67,9 +67,9 @@
             <v-divider></v-divider>
 
             <v-card-actions>
-              <v-btn color="accent" text @click="submit('approve', nft.leapTokenId)" > Change Manager </v-btn>
-              <v-btn color="accent" text @click="submit('transfer', nft.leapTokenId)"> Change Player </v-btn>
-              <v-btn color="accent" text > Player Split </v-btn>
+              <v-btn color="accent" text @click="submit('approve', nft.leapTokenId)" > change manager </v-btn>
+              <v-btn color="accent" text @click="submit('transfer', nft.leapTokenId)"> change user </v-btn>
+              <!-- <v-btn color="accent" text > Player Split </v-btn> -->
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -107,19 +107,19 @@ export default {
   }),
   computed: {
     getNFTs() {
-      var wrappedNFTs = this.$store.state.NFTData.wrappedNFTs;
-      if (wrappedNFTs == null || wrappedNFTs == [] || wrappedNFTs == 0)
+      var lockedNFTs = this.$store.state.NFTData.lockedNFTs;
+      if (lockedNFTs == null || lockedNFTs == [] || lockedNFTs == 0)
         return null;
       if(!this.search){
-        return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
+        return Object.values(lockedNFTs).filter((nft) => this.showNFT(nft));
       } else {
-        let nfts = Object.values(wrappedNFTs).filter(nft => this.showNFT(nft));
+        let nfts = Object.values(lockedNFTs).filter(nft => this.showNFT(nft));
         return nfts.filter(nft => 
           nft.leapTokenId.toLowerCase().includes(this.search.toLowerCase()) || 
           nft.collectionAddress.toLowerCase().includes(this.search.toLowerCase())
         )
       }
-      // return Object.values(wrappedNFTs).filter((nft) => this.showNFT(nft));
+      // return Object.values(lockedNFTs).filter((nft) => this.showNFT(nft));
     },
     getConnectedAccount() {
       console.log(this.$store.state.walletModule.account);
@@ -205,7 +205,7 @@ export default {
   },
   async mounted() {
     //await this.$store.dispatch("getNFTsInAddress");
-    await this.$store.dispatch("getData", { component: "WrappedNFTs" });
+    await this.$store.dispatch("getData", { component: "lockedNFTs" });
   },
 };
 </script>

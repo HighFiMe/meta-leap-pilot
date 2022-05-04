@@ -12,7 +12,7 @@
         </v-row> 
         <v-row v-else>
          <v-col
-          v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri, nft.contract_type))"
+          v-for="nft in getNFTList.filter((nft) => showNFT(nft.symbol, nft.token_uri, nft.contract_type, nft.token_address))"
           :key="nft.synced_at"
           cols="4"
           height="330"
@@ -113,9 +113,9 @@ export default {
         tokenId: tokenId,
       });
     },
-    showNFT(symbol, tokenUri, contractType) {
-      console.log(symbol, tokenUri);
-      if (symbol != "wNFT" && contractType == "ERC721") {
+    showNFT(symbol, tokenUri, contractType, contractAddress) {
+      console.log('contract address ', contractAddress);
+      if (contractAddress == "0xf971a7a4ac619ebce1c0bb9bce6d64779fca1a8e") {
         if (tokenUri != "" && tokenUri != null && tokenUri != "abcd" ) {
           return true;
         }

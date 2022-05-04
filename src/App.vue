@@ -12,34 +12,21 @@
       </div>
 
       <v-spacer></v-spacer>
-
+      <v-btn
+          color="accent"
+          style="
+            text-transform: unset !important;
+            background: lightgrey;
+            font-size: 1.2em;
+            margin-right: 20px;
+          "
+          @click="mintNFT()"
+          >Mint NFT</v-btn
+        >
       <v-btn depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
               $store.state.walletModule.account
             }}</v-btn>
-      <!-- <div class="d-flex align-center" style="padding-right: 24px">
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn 
-              v-if="!$store.state.walletModule.account"
-              depressed
-              v-bind="attrs"
-              v-on="on"
-              color="accent"
-              style="text-transform: unset !important; background: lightgrey; font-size: 1.2em"
-            >
-              connect wallet
-            </v-btn>
-            <v-btn v-else depressed style="text-transform: unset !important; background: lightgrey; font-size: 1.2em">{{
-              $store.state.walletModule.account
-            }}</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(item, index) in items" :key="index" :disabled="item.disabled" link @click="handleClick(index)">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div> -->
+      
     </v-app-bar>
 
     <v-main class="primary">
@@ -104,9 +91,9 @@
               padding: 0px 24px;
             "
           >
-            Wrapped NFT's
+            locked nft's
           </v-btn>
-          <v-btn class="plain--text"
+          <!-- <v-btn class="plain--text"
             
             href=""
             color="accent"
@@ -120,7 +107,7 @@
             "
           >
             managed nfts
-          </v-btn>
+          </v-btn> -->
           <v-btn class="plain--text"
             
             href=""
@@ -134,7 +121,7 @@
               padding: 0px 24px;
             "
           >
-            player access
+            usage access
           </v-btn>
         </v-btn-toggle>
       </div>
@@ -142,12 +129,12 @@
         <MyCollection />
       </div>
       <div v-show="toggle_none == 1">
-        <wrappedNFTs />
+        <LockedNFTs />
       </div>
-      <div v-show="toggle_none == 2">
+      <!-- <div v-show="toggle_none == 2">
         <ManagedNFTs />
-      </div>
-      <div v-show="toggle_none == 3">
+      </div> -->
+      <div v-show="toggle_none == 2">
         <PlayerAccess />
       </div>
     </v-main>
@@ -157,8 +144,8 @@
 
 <script>
 import MyCollection from "./components/MyCollection";
-import wrappedNFTs from "./components/WrappedNFTs.vue";
-import ManagedNFTs from "./components/ManagedNFTs";
+import LockedNFTs from "./components/LockedNFTs.vue";
+// import ManagedNFTs from "./components/ManagedNFTs";
 import PlayerAccess from "./components/PlayerAccess";
 
 //import axios from 'axios';
@@ -171,8 +158,8 @@ export default {
 
   components: {
     MyCollection,
-    wrappedNFTs,
-    ManagedNFTs,
+    LockedNFTs,
+    // ManagedNFTs,
     PlayerAccess,
   },
 
@@ -211,6 +198,16 @@ export default {
     handleClick(index) {
       this.items[index].click.call(this);
     },
+    mintNFT() {
+      this.$vToastify.setSettings({warningInfoDuration: 10000, successDuration:15000});
+      var account = this.$store.state.walletModule.account;
+      if (account == null || account == "") {
+        this.$vToastify.warning("Please connect your wallet, we will mint the NFT to the wallet!");
+        return;
+      }
+      this.$store.dispatch("mintNFT", account).then(() => this.$vToastify.success("Transaction completed, please wait a minute for the NFT to arrive."));
+      this.$vToastify.success("Transaction placed, please wait for it to complete.");
+    },
   },
 
   beforeMount() {
@@ -226,9 +223,8 @@ export default {
   async mounted() {
     let a = 1;
     let b = 1;
-    // this.$store.dispatch("connectToMetamask").then(() => {
-      this.$store.dispatch("refreshData");
-    // });
+    this.$store.dispatch("connectToMetamaskIfConnected")
+    
     while (a == b) {
       await sleep(10000);
       await this.$store.dispatch("refreshData");

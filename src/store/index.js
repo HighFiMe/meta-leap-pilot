@@ -35,7 +35,7 @@ async function getImageFromOpenseaAssetData({ collectionAddress, collectionToken
 const myNftAbi = require("../../contracts/abi/myNftAbi.json");
 const rentalProtAbi = require("../../contracts/abi/rentingProtAbi.json");
 
-const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/graph";
+const APIURL = "https://api.thegraph.com/subgraphs/name/lazycoder1/rentalprotocol";
 
 //const add ="0x0b3074cd5891526420d493b13439f3d4b8be6144"
 const tokensQuery = `
@@ -66,14 +66,15 @@ export default new Vuex.Store({
   state: {
     NFTData: {
       myNFTs: [],
-      wrappedNFTs: {},
+      lockedNFTs: {},
       managedNFTs: {},
       playerAccess: {},
     },
-    wrappingProtocol: "0xD37112756B2E9D19Ba370B25799F53ca3c3163c5",
+    wrappingProtocol: "0xFF9c8D956b01B8FC43e3718a83b9fD9546C18906",
+    nftCollection: "0xF971a7a4aC619EbcE1c0bB9Bce6D64779fcA1a8e",
     loadList: {
       myNFTs: false,
-      wrappedNFTs: false,
+      lockedNFTs: false,
       managedNFTs: false,
       playerAccess: false,
     },
@@ -85,8 +86,8 @@ export default new Vuex.Store({
         case 'myNFTs':
           state.loadList.myNFTs = data.isLoading;
           break;
-        case 'wrappedNFTs':
-          state.loadList.wrappedNFTs = data.isLoading;
+        case 'lockedNFTs':
+          state.loadList.lockedNFTs = data.isLoading;
           break;
         case 'managedNFTs':
           state.loadList.managedNFTs = data.isLoading;
@@ -125,15 +126,15 @@ export default new Vuex.Store({
       var address = state.walletModule.account;
       if (address == "" || address == null) return;
 
-      if (component === "WrappedNFTs") {
+      if (component === "lockedNFTs") {
         
         var wrapped_nfts = tokensQuery.replace("KEY", "owner");
         wrapped_nfts = wrapped_nfts.replace("VALUE", address);
-        var dataWrappedNFTs = await client.query(wrapped_nfts).toPromise();
-        var wrappedNFTDict = convertNFTListToMap(dataWrappedNFTs.data.nfts);
+        var datalockedNFTs = await client.query(wrapped_nfts).toPromise();
+        var wrappedNFTDict = convertNFTListToMap(datalockedNFTs.data.nfts);
         await this.dispatch("commitNFTData",
-          {incomingDict:wrappedNFTDict, currentDict:state.NFTData.wrappedNFTs, type: 'wrappedNFTs'});
-        commit("setLoadingStates", {loadingType: 'wrappedNFTs', setLoading: true})
+          {incomingDict:wrappedNFTDict, currentDict:state.NFTData.lockedNFTs, type: 'lockedNFTs'});
+        commit("setLoadingStates", {loadingType: 'lockedNFTs', setLoading: true})
         
       } else if (component === "ManagedNFTs") {
         
@@ -195,7 +196,7 @@ export default new Vuex.Store({
 
     async refreshData() {
       this.dispatch("getNFTsInAddress");
-      await this.dispatch("getData", { component: "WrappedNFTs" });
+      await this.dispatch("getData", { component: "lockedNFTs" });
       await sleep(1000);
       console.log('here');
       await this.dispatch("getData", { component: "ManagedNFTs" });
@@ -205,9 +206,9 @@ export default new Vuex.Store({
       // console.log(window.ethereum.isConnected())
     },
 
-    async getNFTContract({ state }, nftAddress) {
+    async getNFTContract({ state }) {
       try {
-        var nftAddressChecksum = Web3.utils.toChecksumAddress(nftAddress);
+        var nftAddressChecksum = Web3.utils.toChecksumAddress(state.nftCollection);
         var nftContract = new state.walletModule.web3.eth.Contract(
           myNftAbi,
           nftAddressChecksum
@@ -301,6 +302,21 @@ export default new Vuex.Store({
       } catch (error) {
         console.log("error");
         console.log(error);
+        return null;
+      }
+    },
+
+    async mintNFT(context, account) {
+      try{
+        var nftContract = await this.dispatch("getNFTContract");
+        await nftContract.methods.mintNFT(account, 'https://lh3.googleusercontent.com/NfNeN2am-K5u14t-iFiStppxpLlRT-RPer4tdo2rxuXnLYolDma0HV0EAkx8eZjEIqoUgGC9vBmZRcmbhnCmYlzmXbWgkyL4C9rQjg=w286')
+        .send({
+          from: account
+        });
+
+      } catch (err) {
+        console.log("error");
+        console.log(err);
         return null;
       }
     },
